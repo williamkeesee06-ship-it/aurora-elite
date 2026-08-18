@@ -9,6 +9,35 @@ const stripeKey = process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder';
 const stripe = Stripe(stripeKey);
 
 app.use(cors());
+
+// Webhook needs raw body before express.json()
+app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
+
+  try {
+    if (process.env.STRIPE_WEBHOOK_SECRET) {
+      event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    } else {
+      event = JSON.parse(req.body.toString());
+    }
+  } catch (err) {
+    console.error(`[WEBHOOK SIGNATURE FAILED]`, err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    console.log(`\n✦ [PAYMENT UNLOCKED] Session: ${session.id} | Tier: ${session.metadata.tier}`);
+    console.log(`✦ [SENTINEL KEYCARD ACTIVATED]: ${session.metadata.sentinelToken} for ${session.metadata.targetName} (${session.metadata.targetCity})`);
+  }
+
+  res.json({ received: true });
+});
+
+// JSON and form body parsers
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 
 /**
@@ -39,11 +68,10 @@ const PACKAGES = {
 
 /**
  * Endpoint: Create Dynamic Stripe Checkout Session
- * Handles Package I ($25), Package II ($50), Package III ($75), Package IV ($100)
  */
-app.post('/api/create-checkout-session', express.json(), async (req, res) => {
+app.post('/api/create-checkout-session', async (req, res) => {
   try {
-    const { tier = 'tier-1', targetName = 'Anonymous', targetCity = 'Metro', targetAge = '', targetInitial = '', alertPhone = '' } = req.body;
+    const { tier = 'tier-1', targetName = 'Anonymous', targetCity = 'Metro', targetAge = '', targetInitial = '', alertPhone = '' } = req.body || {};
 
     const selectedPkg = PACKAGES[tier] || PACKAGES['tier-1'];
 
@@ -102,42 +130,14 @@ app.post('/api/create-checkout-session', express.json(), async (req, res) => {
 });
 
 /**
- * Endpoint: Stripe Webhook for Ephemeral Report Decryption & Token Activation
- */
-app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
-  const sig = req.headers['stripe-signature'];
-  let event;
-
-  try {
-    if (process.env.STRIPE_WEBHOOK_SECRET) {
-      event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
-    } else {
-      event = JSON.parse(req.body.toString());
-    }
-  } catch (err) {
-    console.error(`[WEBHOOK SIGNATURE FAILED]`, err.message);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
-
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
-    console.log(`\n✦ [PAYMENT UNLOCKED] Session: ${session.id} | Tier: ${session.metadata.tier}`);
-    console.log(`✦ [SENTINEL KEYCARD ACTIVATED]: ${session.metadata.sentinelToken} for ${session.metadata.targetName} (${session.metadata.targetCity})`);
-  }
-
-  res.json({ received: true });
-});
-
-/**
  * Endpoint: Verify Token for Returning Clients
  */
-app.post('/api/verify-token', express.json(), (req, res) => {
-  const { token } = req.body;
+app.post('/api/verify-token', (req, res) => {
+  const { token } = req.body || {};
   if (!token) {
     return res.status(400).json({ valid: false, error: 'Token required' });
   }
 
-  // Tokens starting with AE- are valid
   const isValid = token.toUpperCase().startsWith('AE-') || token.toUpperCase() === 'DEMO-KEY';
   res.json({
     valid: isValid,
@@ -156,7 +156,6 @@ app.get('/api/health', (req, res) => {
 // Export for Vercel Serverless Function compatibility
 module.exports = app;
 
-// If run directly in local dev node environment
 if (require.main === module) {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
