@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURORA ELITE | Guardians of Reputation</title>
+  <meta name="description" content="Secure your legacy. Vet connections with elite discretion. Anonymous dating reputation audit & Tea platform intelligence for gentlemen.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="aurora-fullscreen-body">
+
+  <!-- Persistent Elite Navigation Header -->
+  <header class="navbar">
+    <div class="nav-container">
+      
+      <!-- Left: ELITE SERVICES (Obsidian) + ENTER VAULT (Gold Inverted) Side-by-Side with Diamonds & Thin Gold Lines -->
+      <div class="nav-left-links">
+        <div class="dropdown-wrapper">
+          <button class="dropdown-toggle-btn" id="services-menu-btn" onclick="toggleDropdown()">
+            <span class="nav-btn-diamond">◆</span>
+            <span class="btn-text">ELITE SERVICES</span>
+            <span class="dropdown-arrow">▾</span>
+          </button>
+        </div>
+
+        <button class="nav-member-btn vault-gold-btn" id="nav-vault-toggle-btn" onclick="toggleVaultModal()">
+          <span class="nav-btn-diamond-dark">◆</span>
+          <span class="btn-text">ENTER VAULT</span>
+          <span class="nav-btn-arrow-dark">→</span>
+        </button>
+      </div>
+
+      <!-- Centered Brand Header -->
+      <div class="brand-center" onclick="closeVaultModal(); closeDropdownIfOpen();">
+        <div class="brand-crest-frame">
+          <img src="assets/ae_shield.png" alt="Aurora Elite Shield Crest" class="nav-crest-img">
+        </div>
+        <div class="brand-title-group">
+          <span class="brand-title">AURORA ELITE</span>
+          <span class="brand-est">EST. 1988</span>
+        </div>
+      </div>
+
+      <!-- Right: Privacy Location Stealth Pill Pushed Far Right -->
+      <div class="nav-right-actions">
+        <div class="live-activity-ticker privacy-pill">
+          <span class="ticker-pulse stealth-pulse"></span>
+          <span class="ticker-text" id="live-scan-ticker">LOCATION JAMMING ACTIVE • IP & REGION UNAVAILABLE</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Left Rail Sliding Drawer Menu (RECONNAISSANCE PACKAGES) -->
+  <aside class="left-rail-drawer glass-dropdown" id="services-dropdown">
+    <div class="rail-header">
+      <div class="rail-title-group">
+        <span class="dd-tag">AURORA DEFENSE MATRIX</span>
+        <h3 class="rail-headline">RECONNAISSANCE PACKAGES</h3>
+      </div>
+      <button class="rail-close-btn" onclick="closeDropdownIfOpen()">✕</button>
+    </div>
+    
+    <div class="rail-scroll-content">
+      <!-- Tier 1: $25 Protocol I: Preliminary Reconnaissance -->
+      <a href="#tier-1" class="dropdown-item" onclick="handleMenuClick('tier-1')">
+        <div class="neon-laser-glyph">
+          <span class="item-roman">I</span>
+        </div>
+        <div class="item-info">
+          <div class="item-title-row">
+            <span class="item-title">Preliminary Reconnaissance</span>
+            <span class="item-price-tag">$25</span>
+          </div>
+          <span class="item-desc">Confidential discovery query across closed dating networks & registries.</span>
+        </div>
+      </a>
+
+      <!-- Tier 2: $50 Protocol II: Forensic Flag Assessment -->
+      <a href="#tier-2" class="dropdown-item" onclick="handleMenuClick('tier-2')">
+        <div class="neon-laser-glyph">
+          <span class="item-roman">II</span>
+        </div>
+        <div class="item-info">
+          <div class="item-title-row">
+            <span class="item-title">Forensic Flag Assessment</span>
+            <span class="item-price-tag">$50</span>
+          </div>
+          <span class="item-desc">Volume verification, red/green flag ratio, photo cross-match & PDF report.</span>
+        </div>
+      </a>
+
+      <!-- Tier 3: $75 Protocol III: Full Transcript Disclosure -->
+      <a href="#tier-3" class="dropdown-item" onclick="handleMenuClick('tier-3')">
+        <div class="neon-laser-glyph">
+          <span class="item-roman">III</span>
+        </div>
+        <div class="item-info">
+          <div class="item-title-row">
+            <span class="item-title">Full Transcript Disclosure</span>
+            <span class="item-price-tag">$75</span>
+          </div>
+          <span class="item-desc">Unredacted word-for-word community discussions, cited sources & media.</span>
+        </div>
+      </a>
+
+      <!-- Tier 4: $100 Protocol IV: 30-Day Sentinel Surveillance -->
+      <a href="#tier-4" class="dropdown-item" onclick="handleMenuClick('tier-4')">
+        <div class="neon-laser-glyph">
+          <span class="item-roman">IV</span>
+        </div>
+        <div class="item-info">
+          <div class="item-title-row">
+            <span class="item-title">30-Day Sentinel Surveillance</span>
+            <span class="item-price-tag">$100</span>
+          </div>
+          <span class="item-desc">Complete unredacted dossier + 30 days of 24/7 autonomous alert guard.</span>
+        </div>
+      </a>
+
+      <!-- Service 5: Protocol V: Legal Defamation Remedy -->
+      <a href="#legal-removal" class="dropdown-item" onclick="handleMenuClick('legal-removal')">
+        <div class="neon-laser-glyph">
+          <span class="item-roman">V</span>
+        </div>
+        <div class="item-info">
+          <div class="item-title-row">
+            <span class="item-title">Legal Defamation Remedy</span>
+            <span class="item-price-tag">REMEDY</span>
+          </div>
+          <span class="item-desc">Statutory cease & desist demand packets and Google search de-indexing.</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="rail-footer">
+      <div class="rail-security-badge">
+        <span class="sec-dot"></span> DISCREET BILLING: <code class="mono-tag">CS*SERVICELOG</code>
+      </div>
+      <button class="dd-action-btn" onclick="closeDropdownIfOpen(); openVaultModal('new-audit', 'tier-1')">
+        <span class="action-btn-text">INITIALIZE PROTOCOL I ($25)</span>
+        <span class="action-btn-arrow">→</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Fullscreen Master Shield Display with Slim Framed Catchphrase -->
+  <main class="fullscreen-hero-wrapper" onclick="closeDropdownIfOpen()">
+    <img src="assets/hero_massive_bg.jpg" alt="Aurora Elite Master Shield" class="fullscreen-hero-image">
+    <!-- Perimeter Tint with Cutout for Gold Rings -->
+    <div class="hero-radial-tint-overlay"></div>
+    <!-- 100% Neon Glow Booster for Center Rings -->
+    <div class="hero-neon-boost-overlay"></div>
+
+    <!-- Slim Framed Luxury Catchphrase Badge -->
+    <div class="hero-catchphrase-badge">
+      <div class="badge-corner corner-tl"></div>
+      <div class="badge-corner corner-tr"></div>
+      <div class="badge-corner corner-bl"></div>
+      <div class="badge-corner corner-br"></div>
+
+      <div class="catchphrase-pretitle">THE SOVEREIGN SHIELD OF DISCRETION</div>
+      <h1 class="hero-catchphrase">
+        GUARDIANS OF REPUTATION
+      </h1>
+      <div class="catchphrase-rule">
+        <span class="rule-line"></span>
+        <span class="rule-diamond">◆</span>
+        <span class="rule-line"></span>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==========================================================================
+       FULLSCREEN VAULT TERMINAL WORKSPACE (Sits Below Persistent Header)
+       ========================================================================== -->
+  <section class="vault-fullscreen-workspace hidden" id="vault-gateway-modal">
+    <div class="vault-workspace-container">
+      
+      <!-- Top Sub-Bar with Tabs & Close Action -->
+      <div class="vault-top-controls">
+        <div class="vault-tabs-nav">
+          <button class="vault-tab active" id="tab-btn-new" onclick="switchVaultTab('new-audit')">
+            <span>01 // INITIALIZE RECONNAISSANCE</span>
+          </button>
+          <button class="vault-tab" id="tab-btn-existing" onclick="switchVaultTab('existing-access')">
+            <span>02 // SENTINEL KEYCARD & SURVEILLANCE OPS</span>
+          </button>
+        </div>
+
+        <button class="vault-exit-btn" onclick="closeVaultModal()" title="Return to Sovereign Shield">
+          <span>EXIT VAULT</span> ✕
+        </button>
+      </div>
+
+      <!-- TAB 1: INITIALIZE NEW PROTOCOL AUDIT (Spacious, Luxury Full-Screen Layout) -->
+      <div class="vault-tab-pane" id="pane-new-audit">
+        
+        <div class="vault-main-grid">
+          
+          <!-- Left Column: Protocol Selectors & Telemetry Scope -->
+          <div class="vault-left-col">
+            <span class="col-kicker">SELECT RECONNAISSANCE PACKAGE</span>
+            
+            <div class="protocol-cards-stack">
+              <!-- Protocol 1 -->
+              <div class="protocol-card active" id="pbtn-tier-1" onclick="selectVaultProtocol('tier-1')">
+                <div class="p-card-header">
+                  <span class="p-card-roman">I</span>
+                  <div class="p-card-headings">
+                    <span class="p-card-title">Preliminary Reconnaissance</span>
+                    <span class="p-card-sub">Binary Identity Presence Check</span>
+                  </div>
+                  <span class="p-card-price">$25</span>
+                </div>
+              </div>
+
+              <!-- Protocol 2 -->
+              <div class="protocol-card" id="pbtn-tier-2" onclick="selectVaultProtocol('tier-2')">
+                <div class="p-card-header">
+                  <span class="p-card-roman">II</span>
+                  <div class="p-card-headings">
+                    <span class="p-card-title">Forensic Flag Assessment</span>
+                    <span class="p-card-sub">Mention Volume, Red Flags & PDF</span>
+                  </div>
+                  <span class="p-card-price">$50</span>
+                </div>
+              </div>
+
+              <!-- Protocol 3 -->
+              <div class="protocol-card" id="pbtn-tier-3" onclick="selectVaultProtocol('tier-3')">
+                <div class="p-card-header">
+                  <span class="p-card-roman">III</span>
+                  <div class="p-card-headings">
+                    <span class="p-card-title">Full Transcript Disclosure</span>
+                    <span class="p-card-sub">Unredacted Text, Cited Links & Media</span>
+                  </div>
+                  <span class="p-card-price">$75</span>
+                </div>
+              </div>
+
+              <!-- Protocol 4 -->
+              <div class="protocol-card" id="pbtn-tier-4" onclick="selectVaultProtocol('tier-4')">
+                <div class="p-card-header">
+                  <span class="p-card-roman">IV</span>
+                  <div class="p-card-headings">
+                    <span class="p-card-title">30-Day Sentinel Surveillance</span>
+                    <span class="p-card-sub">Secret Keycard + 30-Day Live Telemetry Ops</span>
+                  </div>
+                  <span class="p-card-price">$100</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Active Protocol Summary Card -->
+            <div class="active-protocol-summary-box">
+              <div class="summary-badge-row">
+                <span class="scope-tag" id="scope-banner-tag">PACKAGE I ACTIVE</span>
+                <span class="scope-price" id="vault-price-display">$25.00</span>
+              </div>
+              <p class="scope-desc" id="scope-banner-desc">Binary discovery query to determine definitively if your identity exists on Tea for Women, AWDTSG, or private dating review groups.</p>
+              <div class="scope-guarantees">
+                <span>✓ 100% Inverted Stealth</span>
+                <span>✓ Zero Server Logs</span>
+                <span>✓ Anonymous <code class="mono-inline">CS*SERVICELOG</code></span>
+                <span id="scope-keycard-badge" style="display:none; color: var(--gold-light); font-weight:700;">🔑 Generates Encrypted 30-Day Mobile Sentinel Key</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Encrypted Input Terminal & Photo Uploader -->
+          <div class="vault-right-col">
+            <span class="col-kicker">ENCRYPTED QUERY PARAMETERS</span>
+            
+            <form id="vault-audit-form" class="vault-form-box" onsubmit="event.preventDefault(); submitVaultAudit();">
+              <div class="vault-fields-grid">
+                <div class="input-field">
+                  <label for="vault-first-name">FIRST NAME <span class="req">*</span></label>
+                  <input type="text" id="vault-first-name" placeholder="e.g. Alexander" required autocomplete="off">
+                </div>
+                <div class="input-field" id="group-last-initial" style="display: none;">
+                  <label for="vault-last-initial">LAST INITIAL <span class="req">*</span></label>
+                  <input type="text" id="vault-last-initial" placeholder="e.g. K." maxlength="2" autocomplete="off">
+                </div>
+                <div class="input-field">
+                  <label for="vault-age">AGE <span class="req">*</span></label>
+                  <input type="number" id="vault-age" placeholder="e.g. 29" min="18" max="99" required autocomplete="off">
+                </div>
+                <div class="input-field">
+                  <label for="vault-metro">DATING METRO / CITY <span class="req">*</span></label>
+                  <input type="text" id="vault-metro" placeholder="e.g. Miami, FL / New York, NY" required autocomplete="off">
+                </div>
+                <div class="input-field full-span" id="group-alert-phone" style="display: none;">
+                  <label for="vault-alert-phone">30-DAY SENTINEL ALERT DESTINATION (SMS OR PRIVATE WEBHOOK) <span class="req">*</span></label>
+                  <input type="text" id="vault-alert-phone" placeholder="+1 (555) 000-0000 or https://webhook..." autocomplete="off">
+                </div>
+              </div>
+
+              <!-- PHOTO UPLOAD AREA (Activated for Protocol II, III, IV) -->
+              <div class="photo-upload-section" id="vault-photo-container" style="display: none;">
+                <div class="photo-upload-header">
+                  <span class="photo-lbl">DATING PROFILE PHOTO (FOR FACIAL BIOMETRIC MATCHING)</span>
+                  <span class="privacy-guarantee-pill">🔒 ZERO STORAGE • VOLATILE RAM ONLY</span>
+                </div>
+
+                <div class="photo-upload-dropzone" id="vault-dropzone" onclick="document.getElementById('vault-file-input').click()">
+                  <input type="file" id="vault-file-input" accept="image/*" class="hidden" onchange="handleVaultPhotoUpload(this)">
+                  
+                  <!-- Empty Upload Prompt -->
+                  <div class="dropzone-prompt" id="dropzone-prompt">
+                    <span class="drop-icon">📸</span>
+                    <div>
+                      <strong>Click or Drag Dating Profile Photo Here</strong>
+                      <p>Photo vectors are analyzed in volatile RAM and permanently erased after match computation.</p>
+                    </div>
+                  </div>
+
+                  <!-- Uploaded Preview with Instant Delete / Purge Control -->
+                  <div class="dropzone-preview hidden" id="dropzone-preview">
+                    <img id="vault-preview-thumb" src="" alt="Client Photo Preview">
+                    <div class="preview-details">
+                      <span class="preview-filename" id="preview-filename">profile_photo.jpg</span>
+                      <span class="preview-status-text">✓ Encrypted Vector Staged in Volatile Memory</span>
+                    </div>
+                    <button type="button" class="btn-purge-photo" onclick="event.stopPropagation(); purgeUploadedPhoto();">
+                      <span>🗑️ Purge & Delete Photo Now</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Prominent Zero-Storage Disclaimer -->
+                <div class="zero-storage-disclaimer-box">
+                  <p>🛡️ <strong>Absolute Privacy Commitment:</strong> We do NOT store or retain your images. Uploaded photos remain in volatile RAM only for the duration of the neural scan and are permanently purged upon report generation. You may also click the <em>"Purge & Delete Photo"</em> button above at any time to instantly wipe the image from the memory buffer.</p>
+                </div>
+              </div>
+
+              <!-- Checkout & Compliance Action -->
+              <button type="submit" class="cta-gold-btn pulse-glow" id="vault-submit-btn">
+                <span>PROCEED TO ENCRYPTED STRIPE CHECKOUT • $25.00</span>
+                <span>→</span>
+              </button>
+
+              <div class="vault-discreet-footer">
+                <span>🔒 256-Bit SSL Swiss Proxy</span>
+                <span>•</span>
+                <span>Discreet Statement Billing: <code class="mono-tag">CS*SERVICELOG</code></span>
+                <span>•</span>
+                <span>Zero-Knowledge Retention</span>
+              </div>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- TAB 2: SENTINEL ENCRYPTED KEYCARD & 30-DAY LIVE SURVEILLANCE OPERATIONS -->
+      <div class="vault-tab-pane hidden" id="pane-existing-access">
+        
+        <!-- Keycard Entry View (Shown Before Key is Unlocked) -->
+        <div class="token-access-box" id="sentinel-login-box">
+          <span class="token-lead-icon">🔑</span>
+          <h3 class="token-headline">Authenticate Encrypted Sentinel Key</h3>
+          <p class="token-sub">Enter your 30-Day Sentinel Keycard code (sent to your phone/email upon Stripe confirmation) to unlock your private live surveillance operations room.</p>
+
+          <form onsubmit="event.preventDefault(); verifyClientToken();" class="token-form">
+            <div class="token-input-wrap">
+              <input type="text" id="client-token-input" placeholder="AE-SENTINEL-9884" maxlength="20" required autocomplete="off" value="AE-SENTINEL-DEMO">
+              <button type="submit" class="token-submit-btn">AUTHENTICATE OPS KEY</button>
+            </div>
+          </form>
+
+          <div class="token-reassurance">
+            <span>💡 <em>Pre-loaded with sample key <code>AE-SENTINEL-DEMO</code>. Click "Authenticate" to preview the live 30-day surveillance dashboard!</em></span>
+          </div>
+        </div>
+
+        <!-- UNLOCKED 30-DAY LIVE SURVEILLANCE OPERATIONS DASHBOARD -->
+        <div class="sentinel-dashboard-view hidden" id="sentinel-dashboard-view">
+          
+          <!-- Top Sentinel Operations Header -->
+          <div class="sentinel-ops-header">
+            <div class="sentinel-identity-block">
+              <span class="ops-indicator-dot"></span>
+              <div>
+                <span class="ops-kicker">30-DAY AUTONOMOUS SURVEILLANCE OPS // LIVE INTERCEPTION ACTIVE</span>
+                <h3 class="ops-title">COMMAND DOSSIER: <span class="gold-text">ALEXANDER K.</span></h3>
+              </div>
+            </div>
+
+            <!-- 30-Day Live Countdown Clock -->
+            <div class="sentinel-countdown-card">
+              <span class="countdown-lbl">30-DAY RETAINER COUNTDOWN</span>
+              <div class="countdown-digits" id="sentinel-countdown-clock">
+                <span class="digit-box"><strong id="cd-days">29</strong>d</span> :
+                <span class="digit-box"><strong id="cd-hours">18</strong>h</span> :
+                <span class="digit-box"><strong id="cd-mins">42</strong>m</span> :
+                <span class="digit-box"><strong id="cd-secs">14</strong>s</span>
+              </div>
+              <span class="key-status-text">🔑 KEYCARD: <code class="mono-inline" id="active-key-display">AE-SENTINEL-DEMO</code> • EXPIRES IN 29 DAYS</span>
+            </div>
+          </div>
+
+          <!-- Active Metrics & Live Telemetry Grid -->
+          <div class="ops-dashboard-grid">
+            
+            <!-- Column 1: Live Crawler Telemetry Radar & Crawl Feed -->
+            <div class="ops-feed-card">
+              <div class="ops-card-header">
+                <span class="card-icon">📡</span>
+                <div class="card-headings">
+                  <h4>Live Radar Crawlers & Inverted Interceptions</h4>
+                  <span class="card-sub">Autonomous telemetry nodes sweeping regional forums 24/7</span>
+                </div>
+                <span class="live-badge">● 8 NODES ONLINE</span>
+              </div>
+
+              <!-- Live Streaming Terminal Feed -->
+              <div class="radar-telemetry-feed" id="radar-live-feed">
+                <!-- Injected dynamically via app.js -->
+              </div>
+
+              <div class="ops-stats-footer">
+                <div class="stat-cell">
+                  <span class="stat-val">14</span>
+                  <span class="stat-lbl">AWDTSG Sub-Groups</span>
+                </div>
+                <div class="stat-cell">
+                  <span class="stat-val">4</span>
+                  <span class="stat-lbl">Tea Verified Channels</span>
+                </div>
+                <div class="stat-cell">
+                  <span class="stat-val">3</span>
+                  <span class="stat-lbl">Biometric Seed Photos</span>
+                </div>
+                <div class="stat-cell">
+                  <span class="stat-val" style="color:var(--accent-green)">CLEAN</span>
+                  <span class="stat-lbl">Perimeter Status</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Column 2: Intercepted Findings & Actions -->
+            <div class="ops-action-card">
+              <div class="ops-card-header">
+                <span class="card-icon">🛡️</span>
+                <div class="card-headings">
+                  <h4>Threat Interceptions & Instant Remediation</h4>
+                  <span class="card-sub">Real-time alert dispatch & legal de-indexing tools</span>
+                </div>
+              </div>
+
+              <!-- Threat Status Alert Box -->
+              <div class="perimeter-status-box">
+                <div class="status-icon-circle">✓</div>
+                <div class="status-text-group">
+                  <strong>ZERO DEFAMATORY THREADS CURRENTLY ACTIVE</strong>
+                  <p>All 18 monitored dating review nodes in Miami Metro report clean perimeter. Real-time alert dispatched to <code class="mono-inline">+1 (555) 019-8821</code> if any record appears.</p>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="ops-btn-group">
+                <button class="cta-gold-btn" onclick="alert('Generating 24-Page Encrypted PDF Evidence Dossier with Cryptographic Timestamp Proof...');">
+                  <span>📥 DOWNLOAD 24-PAGE EVIDENCE PDF</span>
+                  <span>→</span>
+                </button>
+                <button class="ops-secondary-btn" onclick="alert('Direct statutory legal notice generator ready for instant dispatch.');">
+                  <span>⚖️ PRE-STAGE STATUTORY DMCA TAKEDOWN</span>
+                </button>
+                <button class="ops-secondary-btn" onclick="lockSentinelSession();">
+                  <span>🔒 LOCK SENTINEL SESSION & WIPE MEMORY</span>
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Interactive Protocol Detail Modal (From Menu Clicks) -->
+  <div class="modal-overlay hidden" id="feature-detail-modal">
+    <div class="modal-card feature-modal-box">
+      <div class="modal-header">
+        <div class="brand">
+          <img src="assets/ae_shield.png" alt="Aurora Elite Crest" class="nav-crest-img">
+          <span class="brand-title" id="feature-modal-title">PACKAGE SPECIFICATION</span>
+        </div>
+        <button class="modal-close" onclick="closeFeatureModal()">✕</button>
+      </div>
+      <div class="feature-modal-body" id="feature-modal-content">
+        <!-- Injected dynamically via app.js -->
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
