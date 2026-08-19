@@ -185,7 +185,7 @@
             <span>01 // INITIALIZE RECONNAISSANCE</span>
           </button>
           <button class="vault-tab" id="tab-btn-existing" onclick="switchVaultTab('existing-access')">
-            <span>02 // SENTINEL KEYCARD & SURVEILLANCE OPS</span>
+            <span>02 // ACCESS DOSSIER & SURVEILLANCE</span>
           </button>
         </div>
 
@@ -194,7 +194,7 @@
         </button>
       </div>
 
-      <!-- TAB 1: INITIALIZE NEW PROTOCOL AUDIT (Spacious, Luxury Full-Screen Layout) -->
+      <!-- TAB 1: INITIALIZE NEW PROTOCOL AUDIT -->
       <div class="vault-tab-pane" id="pane-new-audit">
         
         <div class="vault-main-grid">
@@ -355,28 +355,83 @@
 
       </div>
 
-      <!-- TAB 2: SENTINEL ENCRYPTED KEYCARD & 30-DAY LIVE SURVEILLANCE OPERATIONS -->
+      <!-- TAB 2: ACCESS DOSSIER & SURVEILLANCE OPS (TIER-SPECIFIC STATUS VIEWS) -->
       <div class="vault-tab-pane hidden" id="pane-existing-access">
         
-        <!-- Keycard Entry View (Shown Before Key is Unlocked) -->
+        <!-- View A: Standard Key / Passcode Authenticator (If not directly from Stripe checkout) -->
         <div class="token-access-box" id="sentinel-login-box">
           <span class="token-lead-icon">🔑</span>
-          <h3 class="token-headline">Authenticate Encrypted Sentinel Key</h3>
-          <p class="token-sub">Enter your 30-Day Sentinel Keycard code to unlock your private live surveillance operations room.</p>
+          <h3 class="token-headline">Access Reputation Audit / Sentinel Dossier</h3>
+          <p class="token-sub">Enter your Access Code (e.g. <code>AE-AUDIT-XXXX</code> or <code>AE-SENTINEL-XXXX</code>) to view your investigation status.</p>
 
           <form onsubmit="event.preventDefault(); verifyClientToken();" class="token-form">
             <div class="token-input-wrap">
-              <input type="text" id="client-token-input" placeholder="AE-SENTINEL-9884" maxlength="20" required autocomplete="off" value="AE-SENTINEL-DEMO">
-              <button type="submit" class="token-submit-btn">AUTHENTICATE OPS KEY</button>
+              <input type="text" id="client-token-input" placeholder="AE-AUDIT-XXXX" maxlength="24" required autocomplete="off">
+              <button type="submit" class="token-submit-btn">AUTHENTICATE</button>
             </div>
           </form>
+        </div>
 
-          <div class="token-reassurance">
-            <span>💡 <em>Pre-loaded with sample key <code>AE-SENTINEL-DEMO</code>. Click "Authenticate" to preview the live 30-day surveillance dashboard!</em></span>
+        <!-- View B: Package I / II / III Investigation Status Card (No 30-Day Timer) -->
+        <div class="audit-status-view hidden" id="audit-status-view">
+          <div class="status-receipt-card">
+            <div class="receipt-header">
+              <div class="receipt-brand">
+                <span class="sec-dot"></span>
+                <span class="receipt-kicker" id="audit-status-kicker">PACKAGE I // PRELIMINARY RECONNAISSANCE</span>
+              </div>
+              <span class="receipt-badge in-progress" id="audit-status-badge">🔍 INVESTIGATION IN PROGRESS</span>
+            </div>
+
+            <div class="receipt-target-row">
+              <div class="target-col">
+                <span class="target-lbl">TARGET NAME</span>
+                <h3 class="target-name" id="audit-client-name">—</h3>
+              </div>
+              <div class="target-col">
+                <span class="target-lbl">DATING METRO</span>
+                <span class="target-val" id="audit-client-metro">—</span>
+              </div>
+              <div class="target-col">
+                <span class="target-lbl">ORDER ACCESS CODE</span>
+                <code class="target-code" id="audit-client-token">—</code>
+              </div>
+            </div>
+
+            <div class="audit-progress-box">
+              <div class="progress-bar-wrap">
+                <div class="progress-bar-fill animated" id="audit-progress-bar"></div>
+              </div>
+              <div class="progress-meta">
+                <span id="audit-progress-text">Executing confidential query across closed dating networks & Tea boards...</span>
+                <span>EST. SLA: <strong style="color:var(--gold-light)">&lt; 2 HOURS</strong></span>
+              </div>
+            </div>
+
+            <div class="audit-findings-area" id="audit-findings-display">
+              <div class="findings-queued-notice">
+                <span class="notice-icon">🛡️</span>
+                <div>
+                  <strong>ORDER QUEUED FOR OPERATOR INVESTIGATION</strong>
+                  <p>Your reconnaissance parameters have been dispatched to our intelligence team. Once the operator certifies the search across closed regional groups, your verified Binary Discovery result and executive report will unlock right here.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="receipt-footer">
+              <div class="footer-meta">
+                <span>Discreet Billing Descriptor: <code class="mono-inline">CS*SERVICELOG</code></span>
+                <span>•</span>
+                <span>Zero Server Logging Retention</span>
+              </div>
+              <button class="ops-secondary-btn" onclick="lockSentinelSession()">
+                <span>🔒 EXIT RECEIPT</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- UNLOCKED 30-DAY LIVE SURVEILLANCE OPERATIONS DASHBOARD -->
+        <!-- View C: Package IV (Strictly 30-Day Sentinel Dashboard with 30-Day Retainer Clock) -->
         <div class="sentinel-dashboard-view hidden" id="sentinel-dashboard-view">
           
           <!-- Top Sentinel Operations Header -->
@@ -385,8 +440,8 @@
               <span class="ops-indicator-dot"></span>
               <div>
                 <span class="ops-kicker">30-DAY AUTONOMOUS SURVEILLANCE OPS // LIVE INTERCEPTION ACTIVE</span>
-                <h3 class="ops-title">COMMAND DOSSIER: <span class="gold-text" id="dash-client-name">ALEXANDER K.</span></h3>
-                <span class="metro-sub-tag" id="dash-client-metro">MIAMI, FL (18 MONITORED NODES)</span>
+                <h3 class="ops-title">COMMAND DOSSIER: <span class="gold-text" id="dash-client-name">—</span></h3>
+                <span class="metro-sub-tag" id="dash-client-metro">—</span>
               </div>
             </div>
 
@@ -398,11 +453,11 @@
               </div>
               <div class="countdown-digits" id="sentinel-countdown-clock">
                 <span class="digit-box"><strong id="cd-days">29</strong>d</span> :
-                <span class="digit-box"><strong id="cd-hours">18</strong>h</span> :
-                <span class="digit-box"><strong id="cd-mins">42</strong>m</span> :
-                <span class="digit-box"><strong id="cd-secs">14</strong>s</span>
+                <span class="digit-box"><strong id="cd-hours">23</strong>h</span> :
+                <span class="digit-box"><strong id="cd-mins">59</strong>m</span> :
+                <span class="digit-box"><strong id="cd-secs">59</strong>s</span>
               </div>
-              <span class="key-status-text">🔑 KEYCARD: <code class="mono-inline" id="active-key-display">AE-SENTINEL-DEMO</code> • STATUS: <span class="clean-text">ACTIVE GUARD</span></span>
+              <span class="key-status-text">🔑 KEYCARD: <code class="mono-inline" id="active-key-display">AE-SENTINEL-XXXX</code> • STATUS: <span class="clean-text">ACTIVE GUARD</span></span>
             </div>
           </div>
 
@@ -435,8 +490,8 @@
                   <span class="stat-lbl">Tea Channels</span>
                 </div>
                 <div class="stat-cell">
-                  <span class="stat-val">3</span>
-                  <span class="stat-lbl">Seed Photos Staged</span>
+                  <span class="stat-val">1</span>
+                  <span class="stat-lbl">Seed Photo Staged</span>
                 </div>
                 <div class="stat-cell">
                   <span class="stat-val" style="color:var(--accent-green)">ACTIVE</span>
@@ -451,7 +506,7 @@
                   <span class="active-badge-sm">SMS ACTIVE</span>
                 </div>
                 <div class="settings-input-group">
-                  <input type="text" id="dash-phone-input" value="+1 (555) 019-8821" placeholder="Enter phone for instant alert" autocomplete="off">
+                  <input type="text" id="dash-phone-input" value="" placeholder="Enter phone for instant alert" autocomplete="off">
                   <button type="button" class="btn-save-phone" onclick="updateClientPhone()">SAVE NUMBER</button>
                 </div>
                 <span class="settings-hint">Direct SMS alert is dispatched within 8 seconds of any regional forum thread indexing your name.</span>
@@ -466,7 +521,7 @@
                   <h4>Intercepted Community Discussions & Evidence Feed</h4>
                   <span class="card-sub">Unredacted conversation archives and instant takedown actions</span>
                 </div>
-                <span class="findings-count-pill" id="findings-counter-badge">2 RECORDS ACTIVE</span>
+                <span class="findings-count-pill" id="findings-counter-badge">0 RECORDS</span>
               </div>
 
               <!-- Dynamic Threat Findings List Container -->
@@ -476,12 +531,12 @@
 
               <!-- Action Buttons -->
               <div class="ops-btn-group">
-                <button class="cta-gold-btn" onclick="alert('Compiling 24-Page Encrypted PDF Evidence Dossier with Cryptographic Blockchain Timestamps...');">
-                  <span>📥 DOWNLOAD 24-PAGE EVIDENCE DOSSIER PDF</span>
+                <button class="cta-gold-btn" onclick="alert('Compiling Encrypted PDF Evidence Dossier with Cryptographic Blockchain Timestamps...');">
+                  <span>📥 DOWNLOAD EVIDENCE DOSSIER PDF</span>
                   <span>→</span>
                 </button>
                 <div class="secondary-btn-row">
-                  <button class="ops-secondary-btn flex-1" onclick="alert('Statutory cease & desist demand pack generator ready for all flagged threads.');">
+                  <button class="ops-secondary-btn flex-1" onclick="alert('Statutory cease & desist demand pack generator ready for flagged threads.');">
                     <span>⚖️ DMCA TAKEDOWN SUITE</span>
                   </button>
                   <button class="ops-secondary-btn flex-1" onclick="lockSentinelSession();">
@@ -574,7 +629,7 @@
               <span class="kpi-lbl">GROSS REVENUE (30D)</span>
               <span class="kpi-badge-gold">STRIPE LIVE</span>
             </div>
-            <div class="kpi-val">$18,450.00</div>
+            <div class="kpi-val" id="owner-stat-revenue">$18,450.00</div>
             <div class="kpi-sub">
               <span>Today: <strong style="color:var(--accent-green)">+$850.00</strong></span>
               <span>•</span>
@@ -683,14 +738,14 @@
             </div>
           </div>
 
-          <!-- Panel 2: Live 30-Day Sentinel Client Target Roster -->
+          <!-- Panel 2: Live Client Audit & Sentinel Target Roster -->
           <div class="owner-grid-panel">
             <div class="panel-header-row">
               <div class="panel-title-group">
                 <span class="panel-icon">📋</span>
-                <h4>Active 30-Day Sentinel Client Roster</h4>
+                <h4>Incoming Audits & Active Client Roster</h4>
               </div>
-              <span class="badge-gold" id="admin-client-count">3 CLIENTS LOADED</span>
+              <span class="badge-gold" id="admin-client-count">0 LOADED</span>
             </div>
 
             <div class="client-roster-list" id="admin-client-roster-list">
@@ -713,9 +768,7 @@
                 <div class="input-field">
                   <label for="pub-client-select">TARGET CLIENT <span class="req">*</span></label>
                   <select id="pub-client-select" class="admin-select" required>
-                    <option value="AE-SENTINEL-DEMO">Alexander K. (AE-SENTINEL-DEMO) - Miami, FL</option>
-                    <option value="AE-SENTINEL-8842">Marcus V. (AE-SENTINEL-8842) - New York, NY</option>
-                    <option value="AE-SENTINEL-7719">Julian B. (AE-SENTINEL-7719) - Los Angeles, CA</option>
+                    <!-- Populated dynamically via app.js -->
                   </select>
                 </div>
 
@@ -762,14 +815,14 @@
         <div class="studio-sub-header">
           <div class="studio-client-info">
             <span class="studio-tag">CURRENT ACTIVE INVESTIGATION</span>
-            <h3 class="studio-target-title" id="studio-client-header">ALEXANDER K. • MIAMI, FL • PACKAGE III ($75)</h3>
+            <h3 class="studio-target-title" id="studio-client-header">SELECT A CLIENT TO RESEARCH</h3>
           </div>
           <div class="studio-quick-links">
             <a href="https://teaforwomen.com" target="_blank" class="studio-link-btn tea-btn">
               <span>☕ Open Tea App (New Tab) ↗</span>
             </a>
-            <a href="https://www.facebook.com/groups/search/groups/?q=Are%20we%20dating%20the%20same%20guy%20Miami" target="_blank" class="studio-link-btn awdtsg-btn">
-              <span>👥 Search AWDTSG Miami ↗</span>
+            <a href="https://www.facebook.com/groups/search/groups/?q=Are%20we%20dating%20the%20same%20guy" target="_blank" class="studio-link-btn awdtsg-btn">
+              <span>👥 Search AWDTSG ↗</span>
             </a>
             <a href="https://facecheck.id" target="_blank" class="studio-link-btn face-btn">
               <span>📸 FaceCheck Biometric ↗</span>
@@ -793,18 +846,15 @@
                 <img src="assets/crest_logo.png" alt="Client Staged Photo" id="studio-photo-preview" class="staged-photo-img">
               </div>
               <div class="staged-photo-meta">
-                <span id="studio-photo-name">profile_seed_01.jpg</span>
+                <span id="studio-photo-name">seed_image.jpg</span>
                 <button class="btn-copy-query" onclick="copyTargetSearchQuery()">📋 Copy Search String</button>
               </div>
             </div>
 
             <div class="search-strings-box">
               <span class="box-kicker">FAST QUERY STRINGS</span>
-              <div class="query-chip" onclick="navigator.clipboard.writeText('Alex Miami Brickell Hinge'); alert('Copied: Alex Miami Brickell Hinge');">
-                <code>"Alex" "Miami" "Brickell" "Hinge"</code>
-              </div>
-              <div class="query-chip" onclick="navigator.clipboard.writeText('Alexander K. Miami'); alert('Copied: Alexander K. Miami');">
-                <code>"Alexander K." "Miami"</code>
+              <div class="query-chip" id="query-chip-main" onclick="copyTargetSearchQuery()">
+                <code id="query-string-display">"Target Name" "Metro" "Hinge"</code>
               </div>
             </div>
           </div>
@@ -872,7 +922,7 @@
 
               <div class="builder-field">
                 <label>SOURCE PLATFORM / CHANNEL</label>
-                <input type="text" id="studio-rep-source" value="Tea for Women — Miami Private Salon" class="admin-input">
+                <input type="text" id="studio-rep-source" value="Tea for Women & AWDTSG Regional Channels" class="admin-input">
               </div>
 
               <div class="builder-field">

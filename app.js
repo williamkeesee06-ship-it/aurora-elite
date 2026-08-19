@@ -275,13 +275,33 @@ function purgeUploadedPhoto() {
 
 // Stripe Checkout Trigger
 async function submitVaultAudit() {
-  const firstName = document.getElementById('vault-first-name')?.value || "Alex";
+  const firstName = document.getElementById('vault-first-name')?.value || "Client";
   const lastInitial = document.getElementById('vault-last-initial')?.value || "";
-  const age = document.getElementById('vault-age')?.value || "29";
+  const age = document.getElementById('vault-age')?.value || "30";
   const metro = document.getElementById('vault-metro')?.value || "Miami, FL";
   const alertPhone = document.getElementById('vault-alert-phone')?.value || "";
   const protocol = TIER_DATA[currentSelectedProtocol];
   const submitBtn = document.getElementById('vault-submit-btn');
+
+  const fullName = lastInitial ? `${firstName} ${lastInitial}` : firstName;
+  const tokenPrefix = currentSelectedProtocol === 'tier-4' ? 'AE-SENTINEL-' : 'AE-AUDIT-';
+  const assignedToken = tokenPrefix + Math.floor(1000 + Math.random() * 9000);
+
+  // Save submitted client order data to localStorage
+  const activeOrder = {
+    targetName: fullName,
+    targetAge: age,
+    targetCity: metro,
+    alertPhone: alertPhone,
+    tier: currentSelectedProtocol,
+    tierTitle: protocol.title,
+    token: assignedToken,
+    timestamp: new Date().toISOString()
+  };
+  localStorage.setItem('ae_current_order', JSON.stringify(activeOrder));
+
+  // Push to local operator queue
+  registerNewOrderToAdminQueue(activeOrder);
 
   if (submitBtn) {
     submitBtn.innerHTML = `<span>ROUTING TO ENCRYPTED STRIPE GATEWAY...</span>`;
@@ -311,81 +331,144 @@ async function submitVaultAudit() {
     }
   } catch (err) {
     console.error('Stripe Checkout Error:', err);
-    alert(`[STRIPE GATEWAY]\nInitializing ${protocol.title} (${protocol.price}).\nBilling descriptor: CS*SERVICELOG.\nGenerated Sentinel Token: AE-SENTINEL-${Math.floor(1000 + Math.random() * 9000)}.`);
-    if (submitBtn) {
-      submitBtn.innerHTML = `<span>${protocol.ctaText}</span> <span>→</span>`;
-      submitBtn.disabled = false;
-    }
+    // Fallback simulation for testing
+    window.location.href = `/?status=success&token=${assignedToken}&tier=${currentSelectedProtocol}`;
   }
 }
 
+// Register order into admin queue
+function registerNewOrderToAdminQueue(order) {
+  const newAdminClient = {
+    token: order.token,
+    name: order.targetName,
+    metro: order.targetCity + ` (Age ${order.targetAge})`,
+    phone: order.alertPhone || 'N/A',
+    tier: order.tier,
+    tierTitle: order.tierTitle || 'Package I',
+    daysRemaining: order.tier === 'tier-4' ? 30 : 0
+  };
+
+  const existingIdx = adminClients.findIndex(c => c.token === order.token);
+  if (existingIdx === -1) {
+    adminClients.unshift(newAdminClient);
+  }
+  updateAdminClientSelect();
+}
+
 // ==========================================================================
-// 30-DAY SENTINEL LIVE SURVEILLANCE OPS CONTROLLER
+// CLIENT POST-PAYMENT & VERIFICATION CONTROLLER
 // ==========================================================================
-let countdownSeconds = 29 * 86400 + 18 * 3600 + 42 * 60 + 14;
+let countdownSeconds = 30 * 86400;
 let countdownInterval = null;
 let radarStreamInterval = null;
-let currentClientToken = 'AE-SENTINEL-DEMO';
+let currentClientToken = '';
+let clientFindings = [];
 
-const sampleRadarLogs = [
-  { node: "NODE-01 [SWISS]", msg: "AWDTSG Miami North sweep completed. 0 matching records." },
-  { node: "NODE-04 [ZURICH]", msg: "Biometric vector neural analysis: 12 new image threads evaluated -> 0 matches." },
-  { node: "NODE-02 [GENEVA]", msg: "Tea for Women South Beach channel intercepted. Clean status verified." },
-  { node: "NODE-08 [SENTINEL]", msg: "Crawled 18 dating discussion clusters. Zero defamatory mentions." },
-  { node: "NODE-03 [RADAR]", msg: "New thread keyword filter executed: 'Alex' -> Non-target age/photo mismatch." },
-  { node: "NODE-06 [STEALTH]", msg: "Inverted probe executed across 4 secret regional Facebook groups. 0 traces." }
-];
+function handlePostPaymentReturn(token, tier) {
+  openVaultModal('existing-access');
+  
+  let orderData = null;
+  try {
+    const stored = localStorage.getItem('ae_current_order');
+    if (stored) orderData = JSON.parse(stored);
+  } catch(e) {}
 
-let clientFindings = [
-  {
-    id: 'FND-1082',
-    source: 'AWDTSG Miami — South Beach Sub-Group',
-    timestamp: 'Today, 2:45 PM',
-    severity: 'RED_FLAG',
-    severityLabel: '🔴 HIGH SEVERITY RED FLAG',
-    transcript: '"Has anyone gone out with Alex from Brickell? Met him on Hinge, seemed super charming but heard weird rumors from his ex. Need the tea before our date tonight!"',
-    commentsSummary: '3 users replied saying he was polite and normal; 1 user made unverified speculation.'
-  },
-  {
-    id: 'FND-1049',
-    source: 'Tea for Women — Miami Private Salon',
-    timestamp: 'Yesterday, 11:20 AM',
-    severity: 'GREEN_FLAG',
-    severityLabel: '🟢 POSITIVE ENDORSEMENT',
-    transcript: '"Alex K. is 100% vetted! Went to dinner at Carbone with him last month. Total gentleman, paid the bill, drove me home safely. Green flag."',
-    commentsSummary: '12 comments recorded. Overwhelmingly positive feedback.'
-  }
-];
+  const targetName = orderData?.targetName || 'Vetted Client';
+  const targetMetro = orderData?.targetCity || 'Metro Area';
+  const effectiveToken = token || orderData?.token || 'AE-AUDIT-8842';
+  const effectiveTier = tier || orderData?.tier || 'tier-1';
 
-function verifyClientToken() {
-  const token = document.getElementById('client-token-input')?.value.trim();
-  if (!token) return;
-
-  currentClientToken = token.toUpperCase();
   const loginBox = document.getElementById('sentinel-login-box');
-  const dashView = document.getElementById('sentinel-dashboard-view');
-  const keyDisplay = document.getElementById('active-key-display');
+  const statusReceiptView = document.getElementById('audit-status-view');
+  const sentinelDashView = document.getElementById('sentinel-dashboard-view');
 
   if (loginBox) loginBox.classList.add('hidden');
-  if (dashView) dashView.classList.remove('hidden');
-  if (keyDisplay) keyDisplay.textContent = currentClientToken;
 
-  initSentinelClock();
-  initRadarStream();
-  renderClientThreatFeed();
+  // IF TIER 1, 2, OR 3: Display clean Investigation Status receipt (NO 30-day timer)
+  if (effectiveTier === 'tier-1' || effectiveTier === 'tier-2' || effectiveTier === 'tier-3') {
+    if (sentinelDashView) sentinelDashView.classList.add('hidden');
+    if (statusReceiptView) statusReceiptView.classList.remove('hidden');
+
+    const nameEl = document.getElementById('audit-client-name');
+    const metroEl = document.getElementById('audit-client-metro');
+    const tokenEl = document.getElementById('audit-client-token');
+    const kickerEl = document.getElementById('audit-status-kicker');
+    const pkgData = TIER_DATA[effectiveTier] || TIER_DATA['tier-1'];
+
+    if (nameEl) nameEl.textContent = targetName.toUpperCase();
+    if (metroEl) metroEl.textContent = targetMetro.toUpperCase();
+    if (tokenEl) tokenEl.textContent = effectiveToken;
+    if (kickerEl) kickerEl.textContent = `${pkgData.tag} // ${pkgData.title.toUpperCase()}`;
+
+    // Clean findings view
+    const findingsArea = document.getElementById('audit-findings-display');
+    if (findingsArea) {
+      findingsArea.innerHTML = `
+        <div class="findings-queued-notice">
+          <span class="notice-icon">🛡️</span>
+          <div>
+            <strong>CONFIDENTIAL DISCOVERY QUERY IN PROGRESS</strong>
+            <p>Your search parameters for <strong>${targetName}</strong> (${targetMetro}) are currently being conducted across closed networks and Tea for Women boards. Once the sweep is certified by the operator, your certified binary result will appear here.</p>
+          </div>
+        </div>
+      `;
+    }
+  } 
+  // IF TIER 4: 30-DAY SENTINEL SURVEILLANCE OPS ROOM
+  else {
+    if (statusReceiptView) statusReceiptView.classList.add('hidden');
+    if (sentinelDashView) sentinelDashView.classList.remove('hidden');
+
+    const nameEl = document.getElementById('dash-client-name');
+    const metroEl = document.getElementById('dash-client-metro');
+    const keyEl = document.getElementById('active-key-display');
+    const phoneInput = document.getElementById('dash-phone-input');
+
+    if (nameEl) nameEl.textContent = targetName.toUpperCase();
+    if (metroEl) metroEl.textContent = `${targetMetro.toUpperCase()} (18 MONITORED NODES)`;
+    if (keyEl) keyEl.textContent = effectiveToken;
+    if (phoneInput && orderData?.alertPhone) phoneInput.value = orderData.alertPhone;
+
+    initSentinelClock();
+    initRadarStream();
+    renderClientThreatFeed();
+  }
+}
+
+function verifyClientToken() {
+  const token = document.getElementById('client-token-input')?.value.trim().toUpperCase();
+  if (!token) return;
+
+  // Check if it matches an admin client or order
+  const client = adminClients.find(c => c.token === token);
+  const tier = client?.tier || (token.startsWith('AE-SENTINEL') ? 'tier-4' : 'tier-1');
+  
+  if (client) {
+    const mockOrder = {
+      targetName: client.name,
+      targetCity: client.metro,
+      tier: tier,
+      token: client.token
+    };
+    localStorage.setItem('ae_current_order', JSON.stringify(mockOrder));
+  }
+
+  handlePostPaymentReturn(token, tier);
 }
 
 function lockSentinelSession() {
   const loginBox = document.getElementById('sentinel-login-box');
+  const statusReceiptView = document.getElementById('audit-status-view');
   const dashView = document.getElementById('sentinel-dashboard-view');
 
   if (dashView) dashView.classList.add('hidden');
+  if (statusReceiptView) statusReceiptView.classList.add('hidden');
   if (loginBox) loginBox.classList.remove('hidden');
 
   if (countdownInterval) clearInterval(countdownInterval);
   if (radarStreamInterval) clearInterval(radarStreamInterval);
 
-  alert('🔒 Sentinel Session Locked. Temporary browser memory buffer purged.');
+  alert('🔒 Session Locked. Screen buffer cleared.');
 }
 
 function initSentinelClock() {
@@ -410,6 +493,14 @@ function initSentinelClock() {
     }
   }, 1000);
 }
+
+const sampleRadarLogs = [
+  { node: "NODE-01 [SWISS]", msg: "AWDTSG regional sweep completed. 0 matching records." },
+  { node: "NODE-04 [ZURICH]", msg: "Biometric neural analysis: 12 new image threads evaluated -> 0 matches." },
+  { node: "NODE-02 [GENEVA]", msg: "Tea for Women private salon intercepted. Clean status verified." },
+  { node: "NODE-08 [SENTINEL]", msg: "Crawled 18 dating discussion clusters. Zero defamatory mentions." },
+  { node: "NODE-06 [STEALTH]", msg: "Inverted probe executed across secret regional Facebook groups. 0 traces." }
+];
 
 function initRadarStream() {
   const feed = document.getElementById('radar-live-feed');
@@ -453,7 +544,7 @@ function renderClientThreatFeed() {
       <div class="perimeter-status-box" style="padding:1.5rem; text-align:center; background:rgba(0,230,118,0.05); border:1px dashed rgba(0,230,118,0.3); border-radius:8px;">
         <span style="font-size:1.5rem; color:var(--accent-green)">✓</span>
         <strong style="display:block; font-size:0.85rem; color:var(--accent-green); margin-top:0.3rem;">CLEAN PERIMETER ACTIVE</strong>
-        <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">Zero defamatory records indexed across all 18 monitored nodes.</p>
+        <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">Zero defamatory records indexed across all monitored nodes.</p>
       </div>
     `;
     return;
@@ -493,18 +584,15 @@ function updateClientPhone() {
   alert(`✓ Alert destination updated to ${phone}.\nReal-time SMS alerts will be dispatched within 8 seconds of any detected mention.`);
 }
 
+// On page load, handle return from Stripe
 window.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const status = urlParams.get('status');
   const token = urlParams.get('token');
+  const tier = urlParams.get('tier');
 
   if (status === 'success') {
-    openVaultModal('existing-access');
-    const tokenInput = document.getElementById('client-token-input');
-    if (tokenInput && token) {
-      tokenInput.value = token;
-      verifyClientToken();
-    }
+    handlePostPaymentReturn(token, tier);
   }
 });
 
@@ -589,7 +677,6 @@ function closeAdminPortal() {
   if (portal) portal.classList.add('hidden');
 }
 
-// Switch between Command Grid & Research Studio
 function switchOwnerView(viewName) {
   const btnGrid = document.getElementById('btn-owner-view-grid');
   const btnStudio = document.getElementById('btn-owner-view-studio');
@@ -609,36 +696,33 @@ function switchOwnerView(viewName) {
   }
 }
 
-let adminClients = [
-  {
-    token: 'AE-SENTINEL-DEMO',
-    name: 'Alexander K.',
-    metro: 'Miami, FL (Brickell / South Beach)',
-    phone: '+1 (555) 019-8821',
-    daysRemaining: 29
-  },
-  {
-    token: 'AE-SENTINEL-8842',
-    name: 'Marcus V.',
-    metro: 'New York, NY (Manhattan / Brooklyn)',
-    phone: '+1 (555) 349-1120',
-    daysRemaining: 18
-  },
-  {
-    token: 'AE-SENTINEL-7719',
-    name: 'Julian B.',
-    metro: 'Los Angeles, CA (Beverly Hills / WeHo)',
-    phone: '+1 (555) 872-9903',
-    daysRemaining: 24
-  }
-];
+// Dynamic Client & Audit Roster
+let adminClients = [];
 
 function loadAdminRoster() {
+  // Pull stored order if available
+  try {
+    const stored = localStorage.getItem('ae_current_order');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      registerNewOrderToAdminQueue(parsed);
+    }
+  } catch(e) {}
+
   const list = document.getElementById('admin-client-roster-list');
   const countBadge = document.getElementById('admin-client-count');
   if (!list) return;
 
   if (countBadge) countBadge.textContent = `${adminClients.length} CLIENTS LOADED`;
+
+  if (adminClients.length === 0) {
+    list.innerHTML = `
+      <div style="padding:1.5rem; text-align:center; color:var(--text-muted); font-size:0.8rem;">
+        No client orders in queue. Place an audit or test checkout to see orders live!
+      </div>
+    `;
+    return;
+  }
 
   list.innerHTML = adminClients.map(c => `
     <div class="client-roster-card">
@@ -646,15 +730,31 @@ function loadAdminRoster() {
         <span class="client-name">${c.name}</span>
         <code class="token-badge-sm">${c.token}</code>
       </div>
-      <span class="roster-metro">📍 ${c.metro} • 📱 ${c.phone}</span>
+      <span class="roster-metro">📍 ${c.metro} • 🏷️ ${c.tierTitle || 'Audit'} • 📱 ${c.phone}</span>
       <div class="roster-meta-row">
-        <span>⏱️ Retainer: <strong style="color:var(--gold-light)">${c.daysRemaining} Days Left</strong></span>
+        <span>⏱️ Retainer: <strong style="color:var(--gold-light)">${c.daysRemaining > 0 ? c.daysRemaining + ' Days' : '1-Time Scan'}</strong></span>
         <div style="display:flex; gap:0.4rem;">
           <button class="roster-btn-extend" onclick="openStudioForClient('${c.token}')">🔍 RESEARCH</button>
-          <button class="roster-btn-extend" onclick="extendClientRetainer('${c.token}')">+ EXTEND</button>
+          ${c.daysRemaining > 0 ? `<button class="roster-btn-extend" onclick="extendClientRetainer('${c.token}')">+ EXTEND</button>` : ''}
         </div>
       </div>
     </div>
+  `).join('');
+
+  updateAdminClientSelect();
+}
+
+function updateAdminClientSelect() {
+  const select = document.getElementById('pub-client-select');
+  if (!select) return;
+
+  if (adminClients.length === 0) {
+    select.innerHTML = `<option value="">No clients available</option>`;
+    return;
+  }
+
+  select.innerHTML = adminClients.map(c => `
+    <option value="${c.token}">${c.name} (${c.token}) - ${c.metro}</option>
   `).join('');
 }
 
@@ -662,7 +762,11 @@ function openStudioForClient(token) {
   const client = adminClients.find(c => c.token === token);
   if (client) {
     const titleEl = document.getElementById('studio-client-header');
-    if (titleEl) titleEl.textContent = `${client.name.toUpperCase()} • ${client.metro.toUpperCase()} • 30-DAY SENTINEL`;
+    const queryStringDisplay = document.getElementById('query-string-display');
+    
+    if (titleEl) titleEl.textContent = `${client.name.toUpperCase()} • ${client.metro.toUpperCase()} • ${client.tierTitle || 'AUDIT'}`;
+    if (queryStringDisplay) queryStringDisplay.textContent = `"${client.name}" "${client.metro}" "Hinge"`;
+    
     switchOwnerView('studio');
   }
 }
@@ -693,8 +797,10 @@ function navigateStudioBrowser() {
 }
 
 function copyTargetSearchQuery() {
-  navigator.clipboard.writeText('"Alexander" "Alex" "Miami" "Brickell" "Hinge"');
-  alert('📋 Copied target search string to clipboard:\n"Alexander" "Alex" "Miami" "Brickell" "Hinge"');
+  const queryStringDisplay = document.getElementById('query-string-display');
+  const query = queryStringDisplay ? queryStringDisplay.textContent : '"Client Name" "Metro" "Hinge"';
+  navigator.clipboard.writeText(query);
+  alert(`📋 Copied target search string to clipboard:\n${query}`);
 }
 
 // 1-Click Fast-Fill Report Templates
@@ -703,24 +809,24 @@ const REPORT_TEMPLATES = {
     status: 'CLEAN',
     red: 0,
     green: 2,
-    source: 'Tea for Women & AWDTSG Miami Nodes',
-    transcript: 'Zero matching defamatory threads or unverified claims found across all monitored Miami regional channels.',
-    summary: 'VERIFIED CLEAN PERIMETER: Client reputation is pristine. All cross-matched dating inquiries confirm positive etiquette.'
+    source: 'Tea for Women & Regional Review Channels',
+    transcript: 'Zero matching defamatory threads or unverified claims found across all monitored regional groups.',
+    summary: 'VERIFIED CLEAN PERIMETER: Client reputation is pristine. Zero defamatory records found.'
   },
   caution: {
     status: 'MENTIONS_FOUND',
     red: 0,
     green: 1,
-    source: 'AWDTSG Miami — South Beach Sub-Group',
-    transcript: '"Has anyone gone out with Alex from Brickell? Met on Hinge, seemed cool but just checking before drinks tomorrow."',
+    source: 'AWDTSG Regional Sub-Group',
+    transcript: '"Has anyone gone out with this guy? Met on Hinge, seemed cool but just checking before drinks tomorrow."',
     summary: 'MILD DATING INQUIRY: Low-risk pre-date identity inquiry. Multiple respondents confirmed normal gentleman demeanor.'
   },
   redflag: {
     status: 'MENTIONS_FOUND',
     red: 1,
     green: 0,
-    source: 'Tea for Women — Miami Private Salon',
-    transcript: '"Caution with this guy: Ghosted my friend after 3 dates and gave conflicting info about where he works."',
+    source: 'Tea for Women — Private Channel',
+    transcript: '"Caution with this guy: Ghosted my friend after 3 dates and gave conflicting information."',
     summary: 'ACTIONABLE DEFAMATORY CLAIM: Unverified personal gossip. DMCA cease & desist removal packet recommended.'
   }
 };
@@ -768,7 +874,35 @@ function publishStudioReport() {
   clientFindings.unshift(newReportFinding);
   renderClientThreatFeed();
 
-  alert(`🚀 DOSSIER PUBLISHED & SMS DISPATCHED!\n\n1. Target Vault updated with new finding (${newReportFinding.id}).\n2. 24-Page Encrypted PDF ready for client download.\n3. Automated SMS dispatched to client target phone.`);
+  // If in receipt view, update the receipt to completed
+  const badge = document.getElementById('audit-status-badge');
+  const progressFill = document.getElementById('audit-progress-bar');
+  const progressText = document.getElementById('audit-progress-text');
+  const findingsArea = document.getElementById('audit-findings-display');
+
+  if (badge) {
+    badge.textContent = '✓ AUDIT CERTIFIED & COMPLETED';
+    badge.className = 'receipt-badge completed';
+  }
+  if (progressFill) {
+    progressFill.style.width = '100%';
+    progressFill.classList.remove('animated');
+  }
+  if (progressText) {
+    progressText.textContent = 'Confidential investigation complete. Result certified by Aurora Elite.';
+  }
+  if (findingsArea) {
+    findingsArea.innerHTML = `
+      <div style="background:rgba(0,0,0,0.5); border:1px solid var(--border-gold); border-radius:10px; padding:1.4rem;">
+        <span style="font-family:var(--font-mono); font-size:0.7rem; color:var(--gold-primary);">OFFICIAL INTELLIGENCE FINDING:</span>
+        <h4 style="font-family:var(--font-serif); font-size:1.1rem; color:var(--text-main); margin:0.4rem 0;">${severityLabel}</h4>
+        <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">${newReportFinding.transcript}</p>
+        <p style="font-size:0.75rem; color:var(--gold-light); margin-top:0.6rem;"><em>${newReportFinding.commentsSummary}</em></p>
+      </div>
+    `;
+  }
+
+  alert(`🚀 DOSSIER PUBLISHED & SMS DISPATCHED!\n\n1. Target Client Receipt & Vault updated (${newReportFinding.id}).\n2. Certified findings and executive summary staged.\n3. Automated notification sent.`);
 }
 
 function publishAdminFinding() {
@@ -778,9 +912,9 @@ function publishAdminFinding() {
   const transcriptInput = document.getElementById('pub-transcript-input');
   const commentsInput = document.getElementById('pub-comments-summary');
 
-  const token = clientSelect?.value || 'AE-SENTINEL-DEMO';
+  const token = clientSelect?.value || 'AE-AUDIT-DEMO';
   const severity = severitySelect?.value || 'RED_FLAG';
-  const source = sourceInput?.value || 'AWDTSG Miami';
+  const source = sourceInput?.value || 'AWDTSG Regional Group';
   const transcript = transcriptInput?.value || '';
   const comments = commentsInput?.value || '1 comment recorded.';
 
