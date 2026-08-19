@@ -1,9 +1,9 @@
 /* ==========================================================================
    AURORA ELITE — RECONNAISSANCE PACKAGES, STRIPE CHECKOUT,
-   SENTINEL OPS & SOVEREIGN OWNER COMMAND CENTER
+   SENTINEL OPS & SOVEREIGN OWNER COMMAND CENTER (WITH TEA STUDIO)
    ========================================================================== */
 
-// Location Privacy Stealth Telemetry (Location Jamming Active)
+// Location Privacy Stealth Telemetry
 const privacyStatusStates = [
   "LOCATION JAMMING ACTIVE • IP & REGION UNAVAILABLE",
   "GEOLOCATION BLOCKED // 100% UNTRACKED",
@@ -137,9 +137,7 @@ const TIER_DATA = {
 
 let currentSelectedProtocol = 'tier-1';
 
-// ==========================================================================
-// FULLSCREEN VAULT WORKSPACE CONTROLLER
-// ==========================================================================
+// Fullscreen Vault Workspace Controller
 function toggleVaultModal() {
   const workspace = document.getElementById('vault-gateway-modal');
   if (!workspace) return;
@@ -275,7 +273,7 @@ function purgeUploadedPhoto() {
   alert('✓ Photo buffer purged. Image was permanently erased from volatile memory.');
 }
 
-// Form Submission / Stripe Trigger
+// Stripe Checkout Trigger
 async function submitVaultAudit() {
   const firstName = document.getElementById('vault-first-name')?.value || "Alex";
   const lastInitial = document.getElementById('vault-last-initial')?.value || "";
@@ -338,7 +336,6 @@ const sampleRadarLogs = [
   { node: "NODE-06 [STEALTH]", msg: "Inverted probe executed across 4 secret regional Facebook groups. 0 traces." }
 ];
 
-// Mock in-memory client findings for instant live rendering
 let clientFindings = [
   {
     id: 'FND-1082',
@@ -444,7 +441,6 @@ function appendRadarLog(node, msg) {
   feed.prepend(logDiv);
 }
 
-// Render dynamic client findings
 function renderClientThreatFeed() {
   const container = document.getElementById('client-threats-container');
   const badge = document.getElementById('findings-counter-badge');
@@ -454,12 +450,10 @@ function renderClientThreatFeed() {
 
   if (clientFindings.length === 0) {
     container.innerHTML = `
-      <div class="perimeter-status-box">
-        <div class="status-icon-circle">✓</div>
-        <div class="status-text-group">
-          <strong>CLEAN PERIMETER ACTIVE</strong>
-          <p>No active defamatory posts detected across 18 monitored nodes.</p>
-        </div>
+      <div class="perimeter-status-box" style="padding:1.5rem; text-align:center; background:rgba(0,230,118,0.05); border:1px dashed rgba(0,230,118,0.3); border-radius:8px;">
+        <span style="font-size:1.5rem; color:var(--accent-green)">✓</span>
+        <strong style="display:block; font-size:0.85rem; color:var(--accent-green); margin-top:0.3rem;">CLEAN PERIMETER ACTIVE</strong>
+        <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">Zero defamatory records indexed across all 18 monitored nodes.</p>
       </div>
     `;
     return;
@@ -484,7 +478,7 @@ function renderClientThreatFeed() {
           <button class="btn-card-action dmca" onclick="alert('Generated Statutory DMCA Cease & Desist Packet for [${f.id}] commanding immediate post removal from ${f.source}.')">
             ⚖️ STAGE DMCA REMOVAL
           </button>
-          <button class="btn-card-action" onclick="alert('Viewing full cryptographic timestamp metadata for ${f.id}...')">
+          <button class="btn-card-action" onclick="alert('Viewing cryptographic timestamp metadata for ${f.id}...')">
             🔍 VIEW CITATION
           </button>
         </div>
@@ -499,7 +493,6 @@ function updateClientPhone() {
   alert(`✓ Alert destination updated to ${phone}.\nReal-time SMS alerts will be dispatched within 8 seconds of any detected mention.`);
 }
 
-// Check for return from Stripe Checkout (success URL parameters)
 window.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const status = urlParams.get('status');
@@ -574,7 +567,6 @@ async function authenticateAdmin() {
       alert('Access Denied: Invalid Master Passphrase.');
     }
   } catch (err) {
-    // Fallback authentication for local/demo mode
     if (passphrase === 'AURORA1988' || passphrase === 'aurora-elite-ops') {
       closeAdminAuthModal();
       openAdminPortal();
@@ -597,7 +589,26 @@ function closeAdminPortal() {
   if (portal) portal.classList.add('hidden');
 }
 
-// Sample Client Roster for Owner Command Center
+// Switch between Command Grid & Research Studio
+function switchOwnerView(viewName) {
+  const btnGrid = document.getElementById('btn-owner-view-grid');
+  const btnStudio = document.getElementById('btn-owner-view-studio');
+  const paneGrid = document.getElementById('owner-pane-grid');
+  const paneStudio = document.getElementById('owner-pane-studio');
+
+  if (viewName === 'grid') {
+    if (btnGrid) btnGrid.classList.add('active');
+    if (btnStudio) btnStudio.classList.remove('active');
+    if (paneGrid) paneGrid.classList.remove('hidden');
+    if (paneStudio) paneStudio.classList.add('hidden');
+  } else {
+    if (btnGrid) btnGrid.classList.remove('active');
+    if (btnStudio) btnStudio.classList.add('active');
+    if (paneGrid) paneGrid.classList.add('hidden');
+    if (paneStudio) paneStudio.classList.remove('hidden');
+  }
+}
+
 let adminClients = [
   {
     token: 'AE-SENTINEL-DEMO',
@@ -638,10 +649,22 @@ function loadAdminRoster() {
       <span class="roster-metro">📍 ${c.metro} • 📱 ${c.phone}</span>
       <div class="roster-meta-row">
         <span>⏱️ Retainer: <strong style="color:var(--gold-light)">${c.daysRemaining} Days Left</strong></span>
-        <button class="roster-btn-extend" onclick="extendClientRetainer('${c.token}')">+ EXTEND 30D</button>
+        <div style="display:flex; gap:0.4rem;">
+          <button class="roster-btn-extend" onclick="openStudioForClient('${c.token}')">🔍 RESEARCH</button>
+          <button class="roster-btn-extend" onclick="extendClientRetainer('${c.token}')">+ EXTEND</button>
+        </div>
       </div>
     </div>
   `).join('');
+}
+
+function openStudioForClient(token) {
+  const client = adminClients.find(c => c.token === token);
+  if (client) {
+    const titleEl = document.getElementById('studio-client-header');
+    if (titleEl) titleEl.textContent = `${client.name.toUpperCase()} • ${client.metro.toUpperCase()} • 30-DAY SENTINEL`;
+    switchOwnerView('studio');
+  }
 }
 
 function extendClientRetainer(token) {
@@ -653,7 +676,101 @@ function extendClientRetainer(token) {
   }
 }
 
-// Publish Finding from Owner Command Center
+// ==========================================================================
+// INTEGRATED RESEARCH STUDIO & FAST REPORT BUILDER
+// ==========================================================================
+function navigateStudioBrowser() {
+  const urlInput = document.getElementById('studio-browser-url');
+  const iframe = document.getElementById('studio-research-iframe');
+  if (!urlInput || !iframe) return;
+
+  let targetUrl = urlInput.value.trim();
+  if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
+    targetUrl = 'https://' + targetUrl;
+    urlInput.value = targetUrl;
+  }
+  iframe.src = targetUrl;
+}
+
+function copyTargetSearchQuery() {
+  navigator.clipboard.writeText('"Alexander" "Alex" "Miami" "Brickell" "Hinge"');
+  alert('📋 Copied target search string to clipboard:\n"Alexander" "Alex" "Miami" "Brickell" "Hinge"');
+}
+
+// 1-Click Fast-Fill Report Templates
+const REPORT_TEMPLATES = {
+  clean: {
+    status: 'CLEAN',
+    red: 0,
+    green: 2,
+    source: 'Tea for Women & AWDTSG Miami Nodes',
+    transcript: 'Zero matching defamatory threads or unverified claims found across all monitored Miami regional channels.',
+    summary: 'VERIFIED CLEAN PERIMETER: Client reputation is pristine. All cross-matched dating inquiries confirm positive etiquette.'
+  },
+  caution: {
+    status: 'MENTIONS_FOUND',
+    red: 0,
+    green: 1,
+    source: 'AWDTSG Miami — South Beach Sub-Group',
+    transcript: '"Has anyone gone out with Alex from Brickell? Met on Hinge, seemed cool but just checking before drinks tomorrow."',
+    summary: 'MILD DATING INQUIRY: Low-risk pre-date identity inquiry. Multiple respondents confirmed normal gentleman demeanor.'
+  },
+  redflag: {
+    status: 'MENTIONS_FOUND',
+    red: 1,
+    green: 0,
+    source: 'Tea for Women — Miami Private Salon',
+    transcript: '"Caution with this guy: Ghosted my friend after 3 dates and gave conflicting info about where he works."',
+    summary: 'ACTIONABLE DEFAMATORY CLAIM: Unverified personal gossip. DMCA cease & desist removal packet recommended.'
+  }
+};
+
+function applyReportTemplate(templateKey) {
+  const tpl = REPORT_TEMPLATES[templateKey];
+  if (!tpl) return;
+
+  const statusEl = document.getElementById('studio-rep-status');
+  const redEl = document.getElementById('studio-rep-red');
+  const greenEl = document.getElementById('studio-rep-green');
+  const sourceEl = document.getElementById('studio-rep-source');
+  const transcriptEl = document.getElementById('studio-rep-transcript');
+  const summaryEl = document.getElementById('studio-rep-summary');
+
+  if (statusEl) statusEl.value = tpl.status;
+  if (redEl) redEl.value = tpl.red;
+  if (greenEl) greenEl.value = tpl.green;
+  if (sourceEl) sourceEl.value = tpl.source;
+  if (transcriptEl) transcriptEl.value = tpl.transcript;
+  if (summaryEl) summaryEl.value = tpl.summary;
+}
+
+function publishStudioReport() {
+  const status = document.getElementById('studio-rep-status')?.value;
+  const redCount = document.getElementById('studio-rep-red')?.value || 0;
+  const greenCount = document.getElementById('studio-rep-green')?.value || 0;
+  const source = document.getElementById('studio-rep-source')?.value || 'Tea for Women';
+  const transcript = document.getElementById('studio-rep-transcript')?.value;
+  const summary = document.getElementById('studio-rep-summary')?.value;
+
+  const severity = redCount > 0 ? 'RED_FLAG' : (greenCount > 0 ? 'GREEN_FLAG' : 'CAUTION');
+  const severityLabel = severity === 'RED_FLAG' ? '🔴 HIGH SEVERITY RED FLAG' : (severity === 'GREEN_FLAG' ? '🟢 POSITIVE ENDORSEMENT' : '🟡 MODERATE CAUTION');
+
+  const newReportFinding = {
+    id: 'FND-' + Math.floor(1000 + Math.random() * 9000),
+    source: source,
+    timestamp: 'Today (' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ')',
+    severity: severity,
+    severityLabel: severityLabel,
+    transcript: transcript ? `"${transcript}"` : '"Clean perimeter verified. Zero defamatory records indexed."',
+    commentsSummary: summary || 'Executive analysis compiled and certified.'
+  };
+
+  clientFindings.unshift(newReportFinding);
+  renderClientThreatFeed();
+
+  alert(`🚀 DOSSIER PUBLISHED & SMS DISPATCHED!\n\n1. Target Vault updated with new finding (${newReportFinding.id}).\n2. 24-Page Encrypted PDF ready for client download.\n3. Automated SMS dispatched to client target phone.`);
+}
+
 function publishAdminFinding() {
   const clientSelect = document.getElementById('pub-client-select');
   const severitySelect = document.getElementById('pub-severity-select');
@@ -682,11 +799,9 @@ function publishAdminFinding() {
     commentsSummary: comments
   };
 
-  // Add to active client findings
   clientFindings.unshift(newFinding);
   renderClientThreatFeed();
 
-  // Reset form
   if (transcriptInput) transcriptInput.value = '';
   if (sourceInput) sourceInput.value = '';
   if (commentsInput) commentsInput.value = '';
@@ -694,7 +809,6 @@ function publishAdminFinding() {
   alert(`🚀 FINDING PUBLISHED & DISPATCHED!\nReal-time SMS alert sent to client target ${token}.\nFinding staged in client vault with 1-click DMCA readiness.`);
 }
 
-// Protocol Detail Modal Handler
 function handleMenuClick(tierKey) {
   closeDropdownIfOpen();
   if (tierKey.startsWith('tier-')) {

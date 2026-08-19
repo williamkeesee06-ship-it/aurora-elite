@@ -549,6 +549,12 @@
         </div>
 
         <div class="admin-top-actions">
+          <button class="owner-nav-btn active" id="btn-owner-view-grid" onclick="switchOwnerView('grid')">
+            <span>📊 COMMAND GRID & ADS</span>
+          </button>
+          <button class="owner-nav-btn" id="btn-owner-view-studio" onclick="switchOwnerView('studio')">
+            <span>🕵️‍♂️ INTAKE & RESEARCH STUDIO (TEA INTEGRATED)</span>
+          </button>
           <span class="operator-badge">👑 OWNER ROLE: SOVEREIGN ROOT</span>
           <button class="vault-exit-btn" onclick="closeAdminPortal()">
             <span>EXIT COMMAND CENTER</span> ✕
@@ -556,190 +562,336 @@
         </div>
       </div>
 
-      <!-- 4 Hero Financial & Ad Analytics Ribbon -->
-      <div class="owner-kpi-ribbon">
+      <!-- VIEW 1: SOVEREIGN COMMAND GRID -->
+      <div class="owner-view-pane" id="owner-pane-grid">
         
-        <!-- Metric 1: Financials -->
-        <div class="owner-kpi-card">
-          <div class="kpi-top">
-            <span class="kpi-lbl">GROSS REVENUE (30D)</span>
-            <span class="kpi-badge-gold">STRIPE LIVE</span>
+        <!-- 4 Hero Financial & Ad Analytics Ribbon -->
+        <div class="owner-kpi-ribbon">
+          
+          <!-- Metric 1: Financials -->
+          <div class="owner-kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-lbl">GROSS REVENUE (30D)</span>
+              <span class="kpi-badge-gold">STRIPE LIVE</span>
+            </div>
+            <div class="kpi-val">$18,450.00</div>
+            <div class="kpi-sub">
+              <span>Today: <strong style="color:var(--accent-green)">+$850.00</strong></span>
+              <span>•</span>
+              <span>Descriptor: <code class="mono-inline">CS*SERVICELOG</code></span>
+            </div>
           </div>
-          <div class="kpi-val">$18,450.00</div>
-          <div class="kpi-sub">
-            <span>Today: <strong style="color:var(--accent-green)">+$850.00</strong></span>
-            <span>•</span>
-            <span>Descriptor: <code class="mono-inline">CS*SERVICELOG</code></span>
+
+          <!-- Metric 2: Cross-App Ads Ran -->
+          <div class="owner-kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-lbl">CROSS-APP AD IMPRESSIONS</span>
+              <span class="kpi-badge-cyan">● ACTIVE ADS</span>
+            </div>
+            <div class="kpi-val">142,850 <small style="font-size:0.9rem; color:var(--text-muted)">Plays</small></div>
+            <div class="kpi-sub">
+              <span>TikTok: <strong>68.2k</strong></span>
+              <span>•</span>
+              <span>IG Reels: <strong>44.1k</strong></span>
+              <span>•</span>
+              <span>Reddit: <strong>30.5k</strong></span>
+            </div>
           </div>
+
+          <!-- Metric 3: Active Sentinel Retainers -->
+          <div class="owner-kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-lbl">30-DAY SENTINEL RETAINERS</span>
+              <span class="kpi-badge-green">48 CLIENTS</span>
+            </div>
+            <div class="kpi-val">$4,800.00 <small style="font-size:0.9rem; color:var(--gold-light)">MRR</small></div>
+            <div class="kpi-sub">
+              <span>Avg Retainer: <strong>$100.00</strong></span>
+              <span>•</span>
+              <span>Renewal Rate: <strong>72.4%</strong></span>
+            </div>
+          </div>
+
+          <!-- Metric 4: Crawler Nodes & Swiss Proxy -->
+          <div class="owner-kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-lbl">CRAWLER NODES & PROXIES</span>
+              <span class="kpi-badge-green">100% HEALTHY</span>
+            </div>
+            <div class="kpi-val">8 Nodes <small style="font-size:0.9rem; color:var(--accent-green)">Online</small></div>
+            <div class="kpi-sub">
+              <span>Daily Scans: <strong>2,410</strong></span>
+              <span>•</span>
+              <span>Swiss Node: <strong>Active</strong></span>
+            </div>
+          </div>
+
         </div>
 
-        <!-- Metric 2: Cross-App Ads Ran -->
-        <div class="owner-kpi-card">
-          <div class="kpi-top">
-            <span class="kpi-lbl">CROSS-APP AD IMPRESSIONS</span>
-            <span class="kpi-badge-cyan">● ACTIVE ADS</span>
-          </div>
-          <div class="kpi-val">142,850 <small style="font-size:0.9rem; color:var(--text-muted)">Plays</small></div>
-          <div class="kpi-sub">
-            <span>TikTok: <strong>68.2k</strong></span>
-            <span>•</span>
-            <span>IG Reels: <strong>44.1k</strong></span>
-            <span>•</span>
-            <span>Reddit: <strong>30.5k</strong></span>
-          </div>
-        </div>
+        <!-- Expansive Single-View Sovereign Grid (2x2 High-Density Matrix) -->
+        <div class="owner-sovereign-grid">
+          
+          <!-- Panel 1: Cross-App Ad Campaign Matrix -->
+          <div class="owner-grid-panel">
+            <div class="panel-header-row">
+              <div class="panel-title-group">
+                <span class="panel-icon">📊</span>
+                <h4>Cross-App Ad Placements & Campaign Matrix</h4>
+              </div>
+              <button class="btn-panel-action" onclick="alert('Syncing live ad metrics from TikTok Ads API, Meta Marketing API, and Reddit Ads...')">↻ REFRESH AD METRICS</button>
+            </div>
 
-        <!-- Metric 3: Active Sentinel Retainers -->
-        <div class="owner-kpi-card">
-          <div class="kpi-top">
-            <span class="kpi-lbl">30-DAY SENTINEL RETAINERS</span>
-            <span class="kpi-badge-green">48 CLIENTS</span>
+            <div class="ad-matrix-table-wrap">
+              <table class="ad-matrix-table">
+                <thead>
+                  <tr>
+                    <th>CAMPAIGN / CREATIVE</th>
+                    <th>PLATFORM</th>
+                    <th>IMPRESSIONS</th>
+                    <th>CLICKS</th>
+                    <th>CTR</th>
+                    <th>CHECKOUTS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>"Sovereign Shield Hook" (Story 01)</strong></td>
+                    <td><span class="plat-tag tiktok">TikTok</span></td>
+                    <td>68,240</td>
+                    <td>3,140</td>
+                    <td>4.6%</td>
+                    <td><span class="rev-tag">14 ($650)</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>"Tea Platform Radar" (Story 02)</strong></td>
+                    <td><span class="plat-tag instagram">IG Reels</span></td>
+                    <td>44,110</td>
+                    <td>1,890</td>
+                    <td>4.2%</td>
+                    <td><span class="rev-tag">9 ($425)</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>"Dating Defense Dossier" (Story 03)</strong></td>
+                    <td><span class="plat-tag reddit">Reddit</span></td>
+                    <td>30,500</td>
+                    <td>980</td>
+                    <td>3.2%</td>
+                    <td><span class="rev-tag">6 ($375)</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="kpi-val">$4,800.00 <small style="font-size:0.9rem; color:var(--gold-light)">MRR</small></div>
-          <div class="kpi-sub">
-            <span>Avg Retainer: <strong>$100.00</strong></span>
-            <span>•</span>
-            <span>Renewal Rate: <strong>72.4%</strong></span>
-          </div>
-        </div>
 
-        <!-- Metric 4: Crawler Nodes & Swiss Proxy -->
-        <div class="owner-kpi-card">
-          <div class="kpi-top">
-            <span class="kpi-lbl">CRAWLER NODES & PROXIES</span>
-            <span class="kpi-badge-green">100% HEALTHY</span>
+          <!-- Panel 2: Live 30-Day Sentinel Client Target Roster -->
+          <div class="owner-grid-panel">
+            <div class="panel-header-row">
+              <div class="panel-title-group">
+                <span class="panel-icon">📋</span>
+                <h4>Active 30-Day Sentinel Client Roster</h4>
+              </div>
+              <span class="badge-gold" id="admin-client-count">3 CLIENTS LOADED</span>
+            </div>
+
+            <div class="client-roster-list" id="admin-client-roster-list">
+              <!-- Injected dynamically via app.js -->
+            </div>
           </div>
-          <div class="kpi-val">8 Nodes <small style="font-size:0.9rem; color:var(--accent-green)">Online</small></div>
-          <div class="kpi-sub">
-            <span>Daily Scans: <strong>2,410</strong></span>
-            <span>•</span>
-            <span>Swiss Node: <strong>Active</strong></span>
+
+          <!-- Panel 3: Direct Threat Dispatch Console & Broadcaster -->
+          <div class="owner-grid-panel full-width-panel">
+            <div class="panel-header-row">
+              <div class="panel-title-group">
+                <span class="panel-icon">🚀</span>
+                <h4>Direct Threat Interception Publisher & SMS Broadcaster</h4>
+              </div>
+              <span class="live-badge">REAL-TIME DISPATCH</span>
+            </div>
+
+            <form id="admin-publish-finding-form" class="admin-form-box" onsubmit="event.preventDefault(); publishAdminFinding();">
+              <div class="admin-fields-grid">
+                <div class="input-field">
+                  <label for="pub-client-select">TARGET CLIENT <span class="req">*</span></label>
+                  <select id="pub-client-select" class="admin-select" required>
+                    <option value="AE-SENTINEL-DEMO">Alexander K. (AE-SENTINEL-DEMO) - Miami, FL</option>
+                    <option value="AE-SENTINEL-8842">Marcus V. (AE-SENTINEL-8842) - New York, NY</option>
+                    <option value="AE-SENTINEL-7719">Julian B. (AE-SENTINEL-7719) - Los Angeles, CA</option>
+                  </select>
+                </div>
+
+                <div class="input-field">
+                  <label for="pub-severity-select">FLAG SEVERITY LEVEL <span class="req">*</span></label>
+                  <select id="pub-severity-select" class="admin-select" required>
+                    <option value="RED_FLAG">🔴 High Severity Red Flag</option>
+                    <option value="CAUTION">🟡 Moderate Caution / Warning</option>
+                    <option value="GREEN_FLAG">🟢 Positive Endorsement / Green Flag</option>
+                  </select>
+                </div>
+
+                <div class="input-field full-span">
+                  <label for="pub-source-input">SOURCE PLATFORM / CHANNEL NAME <span class="req">*</span></label>
+                  <input type="text" id="pub-source-input" placeholder="e.g. AWDTSG Miami — South Beach Sub-Group / Tea for Women Channel" required autocomplete="off">
+                </div>
+
+                <div class="input-field full-span">
+                  <label for="pub-transcript-input">RAW UNREDACTED CONVERSATION TRANSCRIPT <span class="req">*</span></label>
+                  <textarea id="pub-transcript-input" rows="3" class="admin-textarea" placeholder="Paste the intercepted word-for-word community post or comment thread here..." required></textarea>
+                </div>
+
+                <div class="input-field full-span">
+                  <label for="pub-comments-summary">COMMENTS / SENTIMENT SUMMARY</label>
+                  <input type="text" id="pub-comments-summary" placeholder="e.g. 5 comments recorded. 2 users defended him, 1 user asked for updates." autocomplete="off">
+                </div>
+              </div>
+
+              <button type="submit" class="cta-gold-btn" id="btn-publish-finding">
+                <span>🚀 DISPATCH REAL-TIME SMS ALERT & PUBLISH TO CLIENT VAULT</span>
+                <span>→</span>
+              </button>
+            </form>
           </div>
+
         </div>
 
       </div>
 
-      <!-- Expansive Single-View Sovereign Grid (2x2 High-Density Matrix) -->
-      <div class="owner-sovereign-grid">
+      <!-- VIEW 2: OPERATOR INTAKE & RESEARCH STUDIO (TEA APP INTEGRATED) -->
+      <div class="owner-view-pane hidden" id="owner-pane-studio">
         
-        <!-- Panel 1: Cross-App Ad Campaign Matrix -->
-        <div class="owner-grid-panel">
-          <div class="panel-header-row">
-            <div class="panel-title-group">
-              <span class="panel-icon">📊</span>
-              <h4>Cross-App Ad Placements & Campaign Matrix</h4>
-            </div>
-            <button class="btn-panel-action" onclick="alert('Syncing live ad metrics from TikTok Ads API, Meta Marketing API, and Reddit Ads...')">↻ REFRESH AD METRICS</button>
+        <!-- Top Studio Kicker Bar -->
+        <div class="studio-sub-header">
+          <div class="studio-client-info">
+            <span class="studio-tag">CURRENT ACTIVE INVESTIGATION</span>
+            <h3 class="studio-target-title" id="studio-client-header">ALEXANDER K. • MIAMI, FL • PACKAGE III ($75)</h3>
           </div>
-
-          <div class="ad-matrix-table-wrap">
-            <table class="ad-matrix-table">
-              <thead>
-                <tr>
-                  <th>CAMPAIGN / CREATIVE</th>
-                  <th>PLATFORM</th>
-                  <th>IMPRESSIONS</th>
-                  <th>CLICKS</th>
-                  <th>CTR</th>
-                  <th>CHECKOUTS</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>"Sovereign Shield Hook" (Story 01)</strong></td>
-                  <td><span class="plat-tag tiktok">TikTok</span></td>
-                  <td>68,240</td>
-                  <td>3,140</td>
-                  <td>4.6%</td>
-                  <td><span class="rev-tag">14 ($650)</span></td>
-                </tr>
-                <tr>
-                  <td><strong>"Tea Platform Radar" (Story 02)</strong></td>
-                  <td><span class="plat-tag instagram">IG Reels</span></td>
-                  <td>44,110</td>
-                  <td>1,890</td>
-                  <td>4.2%</td>
-                  <td><span class="rev-tag">9 ($425)</span></td>
-                </tr>
-                <tr>
-                  <td><strong>"Dating Defense Dossier" (Story 03)</strong></td>
-                  <td><span class="plat-tag reddit">Reddit</span></td>
-                  <td>30,500</td>
-                  <td>980</td>
-                  <td>3.2%</td>
-                  <td><span class="rev-tag">6 ($375)</span></td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="studio-quick-links">
+            <a href="https://teaforwomen.com" target="_blank" class="studio-link-btn tea-btn">
+              <span>☕ Open Tea App (New Tab) ↗</span>
+            </a>
+            <a href="https://www.facebook.com/groups/search/groups/?q=Are%20we%20dating%20the%20same%20guy%20Miami" target="_blank" class="studio-link-btn awdtsg-btn">
+              <span>👥 Search AWDTSG Miami ↗</span>
+            </a>
+            <a href="https://facecheck.id" target="_blank" class="studio-link-btn face-btn">
+              <span>📸 FaceCheck Biometric ↗</span>
+            </a>
           </div>
         </div>
 
-        <!-- Panel 2: Live 30-Day Sentinel Client Target Roster -->
-        <div class="owner-grid-panel">
-          <div class="panel-header-row">
-            <div class="panel-title-group">
-              <span class="panel-icon">📋</span>
-              <h4>Active 30-Day Sentinel Client Roster</h4>
+        <!-- 3-Column Integrated Research Studio Layout -->
+        <div class="studio-main-grid">
+          
+          <!-- Column 1: Client Target Profile & Photos -->
+          <div class="studio-col-profile">
+            <div class="studio-box-header">
+              <span class="box-icon">👤</span>
+              <h4>Client Seed Data & Photos</h4>
             </div>
-            <span class="badge-gold" id="admin-client-count">3 CLIENTS LOADED</span>
-          </div>
 
-          <div class="client-roster-list" id="admin-client-roster-list">
-            <!-- Injected dynamically via app.js -->
-          </div>
-        </div>
-
-        <!-- Panel 3: Direct Threat Dispatch Console & Broadcaster -->
-        <div class="owner-grid-panel full-width-panel">
-          <div class="panel-header-row">
-            <div class="panel-title-group">
-              <span class="panel-icon">🚀</span>
-              <h4>Direct Threat Interception Publisher & SMS Broadcaster</h4>
+            <div class="client-staged-photos-card">
+              <span class="card-kicker">STAGED PROFILE PHOTO</span>
+              <div class="staged-photo-frame">
+                <img src="assets/crest_logo.png" alt="Client Staged Photo" id="studio-photo-preview" class="staged-photo-img">
+              </div>
+              <div class="staged-photo-meta">
+                <span id="studio-photo-name">profile_seed_01.jpg</span>
+                <button class="btn-copy-query" onclick="copyTargetSearchQuery()">📋 Copy Search String</button>
+              </div>
             </div>
-            <span class="live-badge">REAL-TIME DISPATCH</span>
+
+            <div class="search-strings-box">
+              <span class="box-kicker">FAST QUERY STRINGS</span>
+              <div class="query-chip" onclick="navigator.clipboard.writeText('Alex Miami Brickell Hinge'); alert('Copied: Alex Miami Brickell Hinge');">
+                <code>"Alex" "Miami" "Brickell" "Hinge"</code>
+              </div>
+              <div class="query-chip" onclick="navigator.clipboard.writeText('Alexander K. Miami'); alert('Copied: Alexander K. Miami');">
+                <code>"Alexander K." "Miami"</code>
+              </div>
+            </div>
           </div>
 
-          <form id="admin-publish-finding-form" class="admin-form-box" onsubmit="event.preventDefault(); publishAdminFinding();">
-            <div class="admin-fields-grid">
-              <div class="input-field">
-                <label for="pub-client-select">TARGET CLIENT <span class="req">*</span></label>
-                <select id="pub-client-select" class="admin-select" required>
-                  <option value="AE-SENTINEL-DEMO">Alexander K. (AE-SENTINEL-DEMO) - Miami, FL</option>
-                  <option value="AE-SENTINEL-8842">Marcus V. (AE-SENTINEL-8842) - New York, NY</option>
-                  <option value="AE-SENTINEL-7719">Julian B. (AE-SENTINEL-7719) - Los Angeles, CA</option>
+          <!-- Column 2: Integrated Live Research Browser Workspace (Tea for Women / AWDTSG) -->
+          <div class="studio-col-browser">
+            <div class="browser-chrome-bar">
+              <div class="browser-controls">
+                <span class="chrome-dot red"></span>
+                <span class="chrome-dot yellow"></span>
+                <span class="chrome-dot green"></span>
+              </div>
+              <div class="browser-address-bar">
+                <span class="lock-icon">🔒</span>
+                <input type="text" id="studio-browser-url" value="https://teaforwomen.com" class="address-input" onkeydown="if(event.key==='Enter') navigateStudioBrowser()">
+              </div>
+              <button class="btn-browser-nav" onclick="navigateStudioBrowser()">GO ↵</button>
+            </div>
+
+            <!-- Live Browser Container with Iframe and Overlay Helper -->
+            <div class="browser-frame-container">
+              <iframe id="studio-research-iframe" src="https://teaforwomen.com" class="studio-iframe" title="Integrated Tea Research Browser"></iframe>
+              <div class="browser-helper-footer">
+                <span>💡 <em>Note: If Tea / Facebook blocks iframe embedding due to browser security policies, use the 1-click split tab buttons above!</em></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 3: Guided 2-Minute Fast Report Builder Form -->
+          <div class="studio-col-builder">
+            <div class="studio-box-header">
+              <span class="box-icon">📝</span>
+              <h4>Fast Report Builder & Vault Fulfiller</h4>
+            </div>
+
+            <!-- Quick Template Fast-Fill Buttons -->
+            <div class="template-fast-buttons">
+              <span class="tpl-lbl">1-CLICK TEMPLATES:</span>
+              <div class="tpl-pills-row">
+                <button type="button" class="tpl-pill green" onclick="applyReportTemplate('clean')">🟢 Clean Vetted</button>
+                <button type="button" class="tpl-pill yellow" onclick="applyReportTemplate('caution')">🟡 Mild Caution</button>
+                <button type="button" class="tpl-pill red" onclick="applyReportTemplate('redflag')">🔴 Red Flag Alert</button>
+              </div>
+            </div>
+
+            <form id="studio-report-form" class="studio-report-form" onsubmit="event.preventDefault(); publishStudioReport();">
+              <div class="builder-field">
+                <label>BINARY RESULT STATUS</label>
+                <select id="studio-rep-status" class="admin-select">
+                  <option value="CLEAN">🟢 CLEAN PERIMETER (0 Defamatory Records)</option>
+                  <option value="MENTIONS_FOUND">🔴 ACTIVE FORUM MENTIONS FOUND</option>
                 </select>
               </div>
 
-              <div class="input-field">
-                <label for="pub-severity-select">FLAG SEVERITY LEVEL <span class="req">*</span></label>
-                <select id="pub-severity-select" class="admin-select" required>
-                  <option value="RED_FLAG">🔴 High Severity Red Flag</option>
-                  <option value="CAUTION">🟡 Moderate Caution / Warning</option>
-                  <option value="GREEN_FLAG">🟢 Positive Endorsement / Green Flag</option>
-                </select>
+              <div class="builder-field-row">
+                <div class="builder-field flex-1">
+                  <label>RED FLAGS COUNT</label>
+                  <input type="number" id="studio-rep-red" value="0" min="0" max="99" class="admin-input">
+                </div>
+                <div class="builder-field flex-1">
+                  <label>GREEN FLAGS COUNT</label>
+                  <input type="number" id="studio-rep-green" value="1" min="0" max="99" class="admin-input">
+                </div>
               </div>
 
-              <div class="input-field full-span">
-                <label for="pub-source-input">SOURCE PLATFORM / CHANNEL NAME <span class="req">*</span></label>
-                <input type="text" id="pub-source-input" placeholder="e.g. AWDTSG Miami — South Beach Sub-Group / Tea for Women Channel" required autocomplete="off">
+              <div class="builder-field">
+                <label>SOURCE PLATFORM / CHANNEL</label>
+                <input type="text" id="studio-rep-source" value="Tea for Women — Miami Private Salon" class="admin-input">
               </div>
 
-              <div class="input-field full-span">
-                <label for="pub-transcript-input">RAW UNREDACTED CONVERSATION TRANSCRIPT <span class="req">*</span></label>
-                <textarea id="pub-transcript-input" rows="3" class="admin-textarea" placeholder="Paste the intercepted word-for-word community post or comment thread here..." required></textarea>
+              <div class="builder-field">
+                <label>UNREDACTED TRANSCRIPT / QUOTE CLIPPER</label>
+                <textarea id="studio-rep-transcript" rows="3" class="admin-textarea" placeholder="Paste raw quote from Tea/AWDTSG here..."></textarea>
               </div>
 
-              <div class="input-field full-span">
-                <label for="pub-comments-summary">COMMENTS / SENTIMENT SUMMARY</label>
-                <input type="text" id="pub-comments-summary" placeholder="e.g. 5 comments recorded. 2 users defended him, 1 user asked for updates." autocomplete="off">
+              <div class="builder-field">
+                <label>EXECUTIVE SUMMARY NOTE</label>
+                <textarea id="studio-rep-summary" rows="2" class="admin-textarea" placeholder="Summary statement for client executive report..."></textarea>
               </div>
-            </div>
 
-            <button type="submit" class="cta-gold-btn" id="btn-publish-finding">
-              <span>🚀 DISPATCH REAL-TIME SMS ALERT & PUBLISH TO CLIENT VAULT</span>
-              <span>→</span>
-            </button>
-          </form>
+              <button type="submit" class="cta-gold-btn mt-05">
+                <span>🚀 PUBLISH DOSSIER & DISPATCH CLIENT SMS</span>
+                <span>→</span>
+              </button>
+            </form>
+          </div>
+
         </div>
 
       </div>
