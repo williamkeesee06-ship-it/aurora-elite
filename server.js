@@ -28,8 +28,8 @@ app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, 
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    console.log(`\n✦ [PAYMENT UNLOCKED] Session: ${session.id} | Tier: ${session.metadata.tier}`);
-    console.log(`✦ [SENTINEL KEYCARD ACTIVATED]: ${session.metadata.sentinelToken} for ${session.metadata.targetName} (${session.metadata.targetCity})`);
+    console.log(`\n✦ [PAYMENT UNLOCKED] Session: ${session.id} | Tier: ${session.metadata?.tier}`);
+    console.log(`✦ [SENTINEL KEYCARD ACTIVATED]: ${session.metadata?.sentinelToken} for ${session.metadata?.targetName} (${session.metadata?.targetCity})`);
   }
 
   res.json({ received: true });
@@ -74,20 +74,17 @@ app.post('/api/create-checkout-session', async (req, res) => {
     const { tier = 'tier-1', targetName = 'Anonymous', targetCity = 'Metro', targetAge = '', targetInitial = '', alertPhone = '' } = req.body || {};
 
     const selectedPkg = PACKAGES[tier] || PACKAGES['tier-1'];
-
-    // Generate unique Client Sentinel Token
     const sentinelToken = `AE-SENTINEL-${Math.floor(1000 + Math.random() * 9000)}`;
 
     const origin = req.headers.origin || req.headers.referer || (process.env.APP_URL || 'http://localhost:3000');
     const cleanOrigin = origin.replace(/\/$/, '');
 
-    // Check if real Stripe key is provided
     if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY.includes('placeholder')) {
-      // Demo / Staging fallback when API key is not yet set in environment
       return res.json({
         id: 'cs_demo_' + Date.now(),
         url: `${cleanOrigin}/?status=success&session_id=demo_${Date.now()}&token=${sentinelToken}&tier=${tier}`,
-        demoMode: true
+        demoMode: true,
+        token: sentinelToken
       });
     }
 
@@ -107,7 +104,9 @@ app.post('/api/create-checkout-session', async (req, res) => {
         },
       ],
       mode: 'payment',
-      statement_descriptor_suffix: 'SERVICELOG', // Discreet billing line item
+      payment_intent_data: {
+        statement_descriptor_suffix: 'SERVICELOG',
+      },
       success_url: `${cleanOrigin}/?status=success&session_id={CHECKOUT_SESSION_ID}&token=${sentinelToken}&tier=${tier}`,
       cancel_url: `${cleanOrigin}/?status=cancelled`,
       metadata: {
@@ -122,7 +121,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
       },
     });
 
-    res.json({ id: session.id, url: session.url, demoMode: false });
+    res.json({ id: session.id, url: session.url, demoMode: false, token: sentinelToken });
   } catch (error) {
     console.error('[STRIPE ERROR]', error);
     res.status(500).json({ error: error.message });
