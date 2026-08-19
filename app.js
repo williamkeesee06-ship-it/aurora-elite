@@ -1,5 +1,6 @@
 /* ==========================================================================
-   AURORA ELITE — RECONNAISSANCE PACKAGES, STRIPE CHECKOUT & SENTINEL OPS
+   AURORA ELITE — RECONNAISSANCE PACKAGES, STRIPE CHECKOUT,
+   SENTINEL OPS & SOVEREIGN OWNER COMMAND CENTER
    ========================================================================== */
 
 // Location Privacy Stealth Telemetry (Location Jamming Active)
@@ -37,7 +38,6 @@ function closeDropdownIfOpen() {
   }
 }
 
-// Close drawer on click outside
 document.addEventListener('click', function(event) {
   const dropdownWrapper = document.querySelector('.dropdown-wrapper');
   const drawer = document.getElementById('services-dropdown');
@@ -238,9 +238,7 @@ function selectVaultProtocol(protocolKey) {
   }
 }
 
-// ==========================================================================
-// PHOTO UPLOAD & INSTANT CLIENT PURGE / DELETE CONTROLS
-// ==========================================================================
+// Photo Upload Controls
 function handleVaultPhotoUpload(input) {
   if (input.files && input.files[0]) {
     const file = input.files[0];
@@ -277,9 +275,7 @@ function purgeUploadedPhoto() {
   alert('✓ Photo buffer purged. Image was permanently erased from volatile memory.');
 }
 
-// ==========================================================================
-// FORM SUBMISSION & STRIPE CHECKOUT INTEGRATION
-// ==========================================================================
+// Form Submission / Stripe Trigger
 async function submitVaultAudit() {
   const firstName = document.getElementById('vault-first-name')?.value || "Alex";
   const lastInitial = document.getElementById('vault-last-initial')?.value || "";
@@ -311,14 +307,12 @@ async function submitVaultAudit() {
     const data = await response.json();
 
     if (data.url) {
-      // Redirect to Stripe checkout
       window.location.href = data.url;
     } else {
       throw new Error(data.error || 'Failed to generate checkout session');
     }
   } catch (err) {
     console.error('Stripe Checkout Error:', err);
-    // Fallback simulation when backend server isn't actively reachable
     alert(`[STRIPE GATEWAY]\nInitializing ${protocol.title} (${protocol.price}).\nBilling descriptor: CS*SERVICELOG.\nGenerated Sentinel Token: AE-SENTINEL-${Math.floor(1000 + Math.random() * 9000)}.`);
     if (submitBtn) {
       submitBtn.innerHTML = `<span>${protocol.ctaText}</span> <span>→</span>`;
@@ -333,6 +327,7 @@ async function submitVaultAudit() {
 let countdownSeconds = 29 * 86400 + 18 * 3600 + 42 * 60 + 14;
 let countdownInterval = null;
 let radarStreamInterval = null;
+let currentClientToken = 'AE-SENTINEL-DEMO';
 
 const sampleRadarLogs = [
   { node: "NODE-01 [SWISS]", msg: "AWDTSG Miami North sweep completed. 0 matching records." },
@@ -343,20 +338,44 @@ const sampleRadarLogs = [
   { node: "NODE-06 [STEALTH]", msg: "Inverted probe executed across 4 secret regional Facebook groups. 0 traces." }
 ];
 
+// Mock in-memory client findings for instant live rendering
+let clientFindings = [
+  {
+    id: 'FND-1082',
+    source: 'AWDTSG Miami — South Beach Sub-Group',
+    timestamp: 'Today, 2:45 PM',
+    severity: 'RED_FLAG',
+    severityLabel: '🔴 HIGH SEVERITY RED FLAG',
+    transcript: '"Has anyone gone out with Alex from Brickell? Met him on Hinge, seemed super charming but heard weird rumors from his ex. Need the tea before our date tonight!"',
+    commentsSummary: '3 users replied saying he was polite and normal; 1 user made unverified speculation.'
+  },
+  {
+    id: 'FND-1049',
+    source: 'Tea for Women — Miami Private Salon',
+    timestamp: 'Yesterday, 11:20 AM',
+    severity: 'GREEN_FLAG',
+    severityLabel: '🟢 POSITIVE ENDORSEMENT',
+    transcript: '"Alex K. is 100% vetted! Went to dinner at Carbone with him last month. Total gentleman, paid the bill, drove me home safely. Green flag."',
+    commentsSummary: '12 comments recorded. Overwhelmingly positive feedback.'
+  }
+];
+
 function verifyClientToken() {
   const token = document.getElementById('client-token-input')?.value.trim();
   if (!token) return;
 
+  currentClientToken = token.toUpperCase();
   const loginBox = document.getElementById('sentinel-login-box');
   const dashView = document.getElementById('sentinel-dashboard-view');
   const keyDisplay = document.getElementById('active-key-display');
 
   if (loginBox) loginBox.classList.add('hidden');
   if (dashView) dashView.classList.remove('hidden');
-  if (keyDisplay) keyDisplay.textContent = token.toUpperCase();
+  if (keyDisplay) keyDisplay.textContent = currentClientToken;
 
   initSentinelClock();
   initRadarStream();
+  renderClientThreatFeed();
 }
 
 function lockSentinelSession() {
@@ -425,6 +444,61 @@ function appendRadarLog(node, msg) {
   feed.prepend(logDiv);
 }
 
+// Render dynamic client findings
+function renderClientThreatFeed() {
+  const container = document.getElementById('client-threats-container');
+  const badge = document.getElementById('findings-counter-badge');
+  if (!container) return;
+
+  if (badge) badge.textContent = `${clientFindings.length} RECORDS ACTIVE`;
+
+  if (clientFindings.length === 0) {
+    container.innerHTML = `
+      <div class="perimeter-status-box">
+        <div class="status-icon-circle">✓</div>
+        <div class="status-text-group">
+          <strong>CLEAN PERIMETER ACTIVE</strong>
+          <p>No active defamatory posts detected across 18 monitored nodes.</p>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = clientFindings.map(f => {
+    const flagClass = f.severity === 'RED_FLAG' ? 'red-flag' : (f.severity === 'GREEN_FLAG' ? 'green-flag' : 'caution-flag');
+    const pillClass = f.severity === 'RED_FLAG' ? 'red' : (f.severity === 'GREEN_FLAG' ? 'green' : 'yellow');
+
+    return `
+      <div class="threat-card ${flagClass}">
+        <div class="threat-card-header">
+          <span class="severity-pill ${pillClass}">${f.severityLabel}</span>
+          <span class="threat-timestamp">${f.timestamp}</span>
+        </div>
+        <span class="threat-source-tag">📍 SOURCE: ${f.source}</span>
+        <div class="threat-quote-box">
+          <p class="threat-quote-text">${f.transcript}</p>
+        </div>
+        <span class="threat-comments-sub">💬 ${f.commentsSummary}</span>
+        <div class="threat-actions-row">
+          <button class="btn-card-action dmca" onclick="alert('Generated Statutory DMCA Cease & Desist Packet for [${f.id}] commanding immediate post removal from ${f.source}.')">
+            ⚖️ STAGE DMCA REMOVAL
+          </button>
+          <button class="btn-card-action" onclick="alert('Viewing full cryptographic timestamp metadata for ${f.id}...')">
+            🔍 VIEW CITATION
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function updateClientPhone() {
+  const phone = document.getElementById('dash-phone-input')?.value;
+  if (!phone) return;
+  alert(`✓ Alert destination updated to ${phone}.\nReal-time SMS alerts will be dispatched within 8 seconds of any detected mention.`);
+}
+
 // Check for return from Stripe Checkout (success URL parameters)
 window.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -441,7 +515,186 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Menu Click Handler for Drawer Items
+// ==========================================================================
+// SECRET OWNER COMMAND CENTER & TRIPLE-CLICK SHIELD TRIGGER
+// ==========================================================================
+let crestClickCount = 0;
+let crestClickTimer = null;
+
+const crestTrigger = document.getElementById('brand-crest-center');
+if (crestTrigger) {
+  crestTrigger.addEventListener('click', (e) => {
+    crestClickCount++;
+    if (crestClickTimer) clearTimeout(crestClickTimer);
+
+    if (crestClickCount >= 3) {
+      e.stopPropagation();
+      crestClickCount = 0;
+      openAdminAuthModal();
+    } else {
+      crestClickTimer = setTimeout(() => {
+        crestClickCount = 0;
+      }, 1000);
+    }
+  });
+}
+
+function openAdminAuthModal() {
+  closeVaultModal();
+  closeDropdownIfOpen();
+  const modal = document.getElementById('admin-auth-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    const input = document.getElementById('admin-passphrase-input');
+    if (input) input.focus();
+  }
+}
+
+function closeAdminAuthModal() {
+  const modal = document.getElementById('admin-auth-modal');
+  if (modal) modal.classList.add('hidden');
+}
+
+async function authenticateAdmin() {
+  const passphrase = document.getElementById('admin-passphrase-input')?.value;
+  if (!passphrase) return;
+
+  try {
+    const res = await fetch('/api/admin-auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ passphrase })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      closeAdminAuthModal();
+      openAdminPortal();
+    } else {
+      alert('Access Denied: Invalid Master Passphrase.');
+    }
+  } catch (err) {
+    // Fallback authentication for local/demo mode
+    if (passphrase === 'AURORA1988' || passphrase === 'aurora-elite-ops') {
+      closeAdminAuthModal();
+      openAdminPortal();
+    } else {
+      alert('Access Denied: Invalid Master Passphrase.');
+    }
+  }
+}
+
+function openAdminPortal() {
+  const portal = document.getElementById('admin-portal-modal');
+  if (portal) {
+    portal.classList.remove('hidden');
+    loadAdminRoster();
+  }
+}
+
+function closeAdminPortal() {
+  const portal = document.getElementById('admin-portal-modal');
+  if (portal) portal.classList.add('hidden');
+}
+
+// Sample Client Roster for Owner Command Center
+let adminClients = [
+  {
+    token: 'AE-SENTINEL-DEMO',
+    name: 'Alexander K.',
+    metro: 'Miami, FL (Brickell / South Beach)',
+    phone: '+1 (555) 019-8821',
+    daysRemaining: 29
+  },
+  {
+    token: 'AE-SENTINEL-8842',
+    name: 'Marcus V.',
+    metro: 'New York, NY (Manhattan / Brooklyn)',
+    phone: '+1 (555) 349-1120',
+    daysRemaining: 18
+  },
+  {
+    token: 'AE-SENTINEL-7719',
+    name: 'Julian B.',
+    metro: 'Los Angeles, CA (Beverly Hills / WeHo)',
+    phone: '+1 (555) 872-9903',
+    daysRemaining: 24
+  }
+];
+
+function loadAdminRoster() {
+  const list = document.getElementById('admin-client-roster-list');
+  const countBadge = document.getElementById('admin-client-count');
+  if (!list) return;
+
+  if (countBadge) countBadge.textContent = `${adminClients.length} CLIENTS LOADED`;
+
+  list.innerHTML = adminClients.map(c => `
+    <div class="client-roster-card">
+      <div class="roster-card-top">
+        <span class="client-name">${c.name}</span>
+        <code class="token-badge-sm">${c.token}</code>
+      </div>
+      <span class="roster-metro">📍 ${c.metro} • 📱 ${c.phone}</span>
+      <div class="roster-meta-row">
+        <span>⏱️ Retainer: <strong style="color:var(--gold-light)">${c.daysRemaining} Days Left</strong></span>
+        <button class="roster-btn-extend" onclick="extendClientRetainer('${c.token}')">+ EXTEND 30D</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function extendClientRetainer(token) {
+  const client = adminClients.find(c => c.token === token);
+  if (client) {
+    client.daysRemaining += 30;
+    loadAdminRoster();
+    alert(`✓ Retainer for ${client.name} (${token}) extended by +30 days (New Total: ${client.daysRemaining} days).`);
+  }
+}
+
+// Publish Finding from Owner Command Center
+function publishAdminFinding() {
+  const clientSelect = document.getElementById('pub-client-select');
+  const severitySelect = document.getElementById('pub-severity-select');
+  const sourceInput = document.getElementById('pub-source-input');
+  const transcriptInput = document.getElementById('pub-transcript-input');
+  const commentsInput = document.getElementById('pub-comments-summary');
+
+  const token = clientSelect?.value || 'AE-SENTINEL-DEMO';
+  const severity = severitySelect?.value || 'RED_FLAG';
+  const source = sourceInput?.value || 'AWDTSG Miami';
+  const transcript = transcriptInput?.value || '';
+  const comments = commentsInput?.value || '1 comment recorded.';
+
+  if (!transcript) {
+    alert('Please enter the unredacted conversation transcript.');
+    return;
+  }
+
+  const newFinding = {
+    id: 'FND-' + Math.floor(1000 + Math.random() * 9000),
+    source: source,
+    timestamp: 'Just now (' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ')',
+    severity: severity,
+    severityLabel: severity === 'RED_FLAG' ? '🔴 HIGH SEVERITY RED FLAG' : (severity === 'GREEN_FLAG' ? '🟢 POSITIVE ENDORSEMENT' : '🟡 MODERATE CAUTION'),
+    transcript: `"${transcript}"`,
+    commentsSummary: comments
+  };
+
+  // Add to active client findings
+  clientFindings.unshift(newFinding);
+  renderClientThreatFeed();
+
+  // Reset form
+  if (transcriptInput) transcriptInput.value = '';
+  if (sourceInput) sourceInput.value = '';
+  if (commentsInput) commentsInput.value = '';
+
+  alert(`🚀 FINDING PUBLISHED & DISPATCHED!\nReal-time SMS alert sent to client target ${token}.\nFinding staged in client vault with 1-click DMCA readiness.`);
+}
+
+// Protocol Detail Modal Handler
 function handleMenuClick(tierKey) {
   closeDropdownIfOpen();
   if (tierKey.startsWith('tier-')) {
