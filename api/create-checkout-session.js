@@ -60,7 +60,7 @@ module.exports = async function handler(req, res) {
     const origin = req.headers.origin || req.headers.referer || process.env.APP_URL || 'https://aurora-elite-three.vercel.app';
     const cleanOrigin = origin.replace(/\/$/, '');
 
-    // If Stripe Secret Key is not configured yet, return instant demo fallback
+    // If Stripe Secret Key is not configured or in placeholder mode, return instant demo URL
     if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY.includes('placeholder')) {
       return res.status(200).json({
         id: 'cs_demo_' + Date.now(),
@@ -87,9 +87,6 @@ module.exports = async function handler(req, res) {
         },
       ],
       mode: 'payment',
-      payment_intent_data: {
-        statement_descriptor_suffix: 'SERVICELOG',
-      },
       success_url: `${cleanOrigin}/?status=success&session_id={CHECKOUT_SESSION_ID}&token=${sentinelToken}&tier=${tier}`,
       cancel_url: `${cleanOrigin}/?status=cancelled`,
       metadata: {
