@@ -1,0 +1,37 @@
+[
+  {
+    "timestamp": "2026-08-25T09:01:15.342724Z",
+    "network": "Reddit Promoted (r/AskMen, r/dating)",
+    "campaign_id": "CAMP-02-PRE-DATE-PERIMETER",
+    "status": "DISPATCHED_ACTIVE",
+    "details": "Creative loaded: ad_02_dating_forum_scan.jpg | Budget: $50.0/day | Destination: https://aurora-elite-three.vercel.app/?utm_source=meta_ads&utm_medium=cpc&utm_campaign=dating_vetting"
+  },
+  {
+    "timestamp": "2026-08-25T09:01:14.839732Z",
+    "network": "Meta Ads (Instagram & FB)",
+    "campaign_id": "CAMP-02-PRE-DATE-PERIMETER",
+    "status": "DISPATCHED_ACTIVE",
+    "details": "Creative loaded: ad_02_dating_forum_scan.jpg | Budget: $50.0/day | Destination: https://aurora-elite-three.vercel.app/?utm_source=meta_ads&utm_medium=cpc&utm_campaign=dating_vetting"
+  },
+  {
+    "timestamp": "2026-08-25T09:01:14.337705Z",
+    "network": "YouTube Shorts",
+    "campaign_id": "CAMP-01-TEA-DISCOVERY",
+    "status": "DISPATCHED_ACTIVE",
+    "details": "Creative loaded: ad_01_tea_match_alert.jpg | Budget: $35.0/day | Destination: https://aurora-elite-three.vercel.app/?utm_source=tiktok_ads&utm_medium=cpc&utm_campaign=tea_intercept"
+  },
+  {
+    "timestamp": "2026-08-25T09:01:13.835684Z",
+    "network": "Instagram Reels",
+    "campaign_id": "CAMP-01-TEA-DISCOVERY",
+    "status": "DISPATCHED_ACTIVE",
+    "details": "Creative loaded: ad_01_tea_match_alert.jpg | Budget: $35.0/day | Destination: https://aurora-elite-three.vercel.app/?utm_source=tiktok_ads&utm_medium=cpc&utm_campaign=tea_intercept"
+  },
+  {
+    "timestamp": "2026-08-25T09:01:13.330731Z",
+    "network": "TikTok In-Feed Ads",
+    "campaign_id": "CAMP-01-TEA-DISCOVERY",
+    "status": "DISPATCHED_ACTIVE",
+    "details": "Creative loaded: ad_01_tea_match_alert.jpg | Budget: $35.0/day | Destination: https://aurora-elite-three.vercel.app/?utm_source=tiktok_ads&utm_medium=cpc&utm_campaign=tea_intercept"
+  }
+]
