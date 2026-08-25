@@ -545,6 +545,53 @@ body.aurora-fullscreen-body {
   font-size: 0.55rem;
 }
 
+.hero-legal-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  pointer-events: auto;
+}
+
+.hero-legal-links a, .rail-legal-links a, .vault-legal-sublinks a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.hero-legal-links a:hover, .rail-legal-links a:hover, .vault-legal-sublinks a:hover {
+  color: var(--gold-primary);
+  text-decoration: underline;
+}
+
+.rail-legal-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.vault-legal-sublinks {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
 /* ==========================================================================
    FULLSCREEN VAULT TERMINAL WORKSPACE
    ========================================================================== */
