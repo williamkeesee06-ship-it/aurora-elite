@@ -6,23 +6,23 @@ const stripe = Stripe(stripeKey);
 
 const PACKAGES = {
   'tier-1': {
-    name: 'AURORA ELITE // Package I: Preliminary Reconnaissance',
-    desc: 'Binary presence discovery query across private datelines & review boards.',
+    name: 'Aurora Elite — Preliminary Reconnaissance',
+    desc: 'Confidential discovery query across closed dating networks & registries.',
     priceInCents: 2500, // $25.00
   },
   'tier-2': {
-    name: 'AURORA ELITE // Package II: Forensic Flag Assessment',
-    desc: 'Volume mention counts, red/green flag classification, biometric cross-match & PDF report.',
+    name: 'Aurora Elite — Forensic Flag Assessment',
+    desc: 'Volume verification, red/green flag ratio, photo cross-match & PDF report.',
     priceInCents: 5000, // $50.00
   },
   'tier-3': {
-    name: 'AURORA ELITE // Package III: Full Transcript Disclosure',
-    desc: 'Complete unredacted conversations, cited source links, screenshots & 24-page evidence dossier.',
+    name: 'Aurora Elite — Full Transcript Disclosure',
+    desc: 'Unredacted word-for-word community discussions, cited sources & media dossier.',
     priceInCents: 7500, // $75.00
   },
   'tier-4': {
-    name: 'AURORA ELITE // Package IV: 30-Day Sentinel Surveillance',
-    desc: 'Full unredacted dossier + 30 days of 24/7 autonomous telemetry guard and encrypted mobile keycard.',
+    name: 'Aurora Elite — 30-Day Sentinel Surveillance',
+    desc: 'Complete unredacted dossier + 30 days of 24/7 autonomous alert guard & keycard.',
     priceInCents: 10000, // $100.00
   }
 };
