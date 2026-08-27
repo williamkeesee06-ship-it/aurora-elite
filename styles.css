@@ -2468,3 +2468,269 @@ body.aurora-fullscreen-body {
 }
 
 .hidden { display: none !important; }
+
+/* ==========================================================================
+   MARCUS: MOBILE SPECIALIST RESPONSIVE ENGINE (iOS & Android Touch Optimization)
+   ========================================================================== */
+
+@media screen and (max-width: 900px) {
+  /* Dynamic Viewport Unit for Mobile Browser URL Bar shifts */
+  body.aurora-fullscreen-body {
+    height: 100dvh;
+    height: -webkit-fill-available;
+    overflow-x: hidden;
+  }
+
+  /* Compact Navbar */
+  .navbar {
+    height: 64px;
+    padding: 0 1rem;
+  }
+
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-left-links {
+    gap: 0.5rem;
+  }
+
+  .dropdown-toggle-btn {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.68rem;
+    letter-spacing: 1.5px;
+    gap: 0.4rem;
+  }
+
+  .vault-gold-btn {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.68rem;
+    letter-spacing: 1.5px;
+    gap: 0.4rem;
+  }
+
+  .brand-center {
+    position: static;
+    transform: none;
+    gap: 0.5rem;
+  }
+
+  .brand-crest-frame {
+    width: 34px;
+    height: 34px;
+  }
+
+  .brand-title {
+    font-size: 0.95rem;
+    letter-spacing: 1.5px;
+  }
+
+  .brand-est {
+    font-size: 0.55rem;
+  }
+
+  .nav-right-actions {
+    display: none; /* Hide wide desktop ticker to give clean space to logo & buttons */
+  }
+
+  /* Sliding Drawer: Full-width on mobile */
+  .left-rail-drawer {
+    width: 100vw;
+    max-width: 100vw;
+    top: 64px;
+    height: calc(100dvh - 64px);
+    border-radius: 0;
+    border-right: none;
+  }
+
+  .rail-scroll-content {
+    padding: 1rem 1.2rem;
+    gap: 0.8rem;
+  }
+
+  /* Hero Catchphrase Scaling */
+  .hero-catchphrase-badge {
+    bottom: 24px;
+    padding: 1rem 1.4rem;
+    max-width: 92vw;
+  }
+
+  .hero-catchphrase {
+    font-size: 1.35rem;
+    letter-spacing: 3px;
+  }
+
+  .catchphrase-pretitle {
+    font-size: 0.55rem;
+    letter-spacing: 2.5px;
+  }
+
+  .hero-legal-links {
+    flex-wrap: wrap;
+    font-size: 0.58rem;
+    gap: 0.5rem;
+  }
+
+  /* Fullscreen Vault Terminal Mobile Layout */
+  .vault-fullscreen-workspace {
+    top: 64px;
+    height: calc(100dvh - 64px);
+  }
+
+  .vault-workspace-container {
+    padding: 1rem 1rem 3rem;
+  }
+
+  .vault-top-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.8rem;
+  }
+
+  .vault-tabs-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .vault-tab {
+    padding: 0.65rem 0.8rem;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .vault-exit-btn {
+    width: 100%;
+    text-align: center;
+    padding: 0.55rem;
+    font-size: 0.68rem;
+  }
+
+  /* Grid turns into Single-Column */
+  .vault-main-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  /* Horizontal Swipe Carousel for Package Selection on Mobile */
+  .protocol-cards-stack {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.8rem;
+    padding-bottom: 0.8rem;
+  }
+
+  .protocol-card {
+    flex: 0 0 82vw;
+    max-width: 82vw;
+    scroll-snap-align: center;
+    padding: 1.1rem;
+    border-radius: 12px;
+  }
+
+  .p-card-roman {
+    font-size: 1.5rem;
+    min-width: 28px;
+  }
+
+  .p-card-title {
+    font-size: 0.88rem;
+  }
+
+  .p-card-price {
+    font-size: 1.15rem;
+  }
+
+  /* Form Container */
+  .vault-form-card {
+    padding: 1.3rem;
+    border-radius: 14px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+
+  .input-field input, .input-field select, .admin-textarea {
+    font-size: 16px !important; /* Prevents auto-zoom on iOS Safari */
+    padding: 0.75rem 0.85rem;
+  }
+
+  .cta-gold-btn {
+    padding: 1rem 1.2rem;
+    font-size: 0.82rem;
+    letter-spacing: 1px;
+    min-height: 48px; /* Touch-friendly tap target */
+  }
+
+  /* Sentinel 30-Day Dashboard Mobile View */
+  .sentinel-grid-wrapper {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .ops-radar-card, .ops-stream-card {
+    padding: 1.2rem;
+  }
+
+  .radar-stat-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+
+  .secondary-btn-row {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .ops-secondary-btn {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  /* Owner Command Center Mobile Adaptation (Single Column Accordion) */
+  .admin-top-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .owner-nav-btn {
+    width: 100%;
+    font-size: 0.65rem;
+  }
+
+  .owner-kpi-ribbon {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .owner-2x2-grid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .studio-3col-layout {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .browser-frame-container {
+    height: 380px;
+  }
+
+  .builder-field-row {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+}
