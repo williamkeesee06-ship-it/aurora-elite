@@ -1,8 +1,8 @@
 require('dotenv').config();
 const Stripe = require('stripe');
 
-const stripeKey = process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder';
-const stripe = Stripe(stripeKey);
+const crypto = require('crypto');
+const { APP_URL, applyCors, parseBody } = require('./_lib/security');
 
 const PACKAGES = {
   'tier-1': {
@@ -27,83 +27,59 @@ const PACKAGES = {
   }
 };
 
+const str = (v, max = 80) => String(v == null ? '' : v).slice(0, max);
+
 module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
-
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-
+  if (!applyCors(req, res, 'POST,OPTIONS')) return;
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Never fake a successful payment. If Stripe isn't configured, fail loudly.
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key || key.includes('placeholder') || key.includes('replace_with')) {
+    console.error('[CHECKOUT] STRIPE_SECRET_KEY is not configured; refusing to create a session.');
+    return res.status(503).json({ error: 'Payments are temporarily unavailable. Please try again later.' });
+  }
+  const stripe = Stripe(key);
+
   try {
-    let body = req.body;
-    if (typeof body === 'string') {
-      try { body = JSON.parse(body); } catch(e) {}
-    }
-    body = body || {};
+    const body = parseBody(req);
+    const tier = PACKAGES[body.tier] ? body.tier : null;
+    if (!tier) return res.status(400).json({ error: 'Invalid package' });
+    const selectedPkg = PACKAGES[tier];
 
-    const { tier = 'tier-1', targetName = 'Anonymous', targetCity = 'Metro', targetAge = '', targetInitial = '', alertPhone = '' } = body;
+    // Opaque client reference; the customer's access token is only issued after Stripe confirms payment.
+    const clientRef = 'AE-' + crypto.randomBytes(6).toString('hex').toUpperCase();
 
-    const selectedPkg = PACKAGES[tier] || PACKAGES['tier-1'];
-    const sentinelToken = `AE-SENTINEL-${Math.floor(1000 + Math.random() * 9000)}`;
-
-    const origin = req.headers.origin || req.headers.referer || process.env.APP_URL || 'https://aurora-elite-three.vercel.app';
-    const cleanOrigin = origin.replace(/\/$/, '');
-
-    // If Stripe Secret Key is not configured or in placeholder mode, return instant demo URL
-    if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY.includes('placeholder')) {
-      return res.status(200).json({
-        id: 'cs_demo_' + Date.now(),
-        url: `${cleanOrigin}/?status=success&session_id=demo_${Date.now()}&token=${sentinelToken}&tier=${tier}`,
-        demoMode: true,
-        token: sentinelToken
-      });
-    }
-
-    // Live Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card', 'link'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: selectedPkg.name,
-              description: selectedPkg.desc,
-            },
-            unit_amount: selectedPkg.priceInCents,
-          },
-          quantity: 1,
+      line_items: [{
+        price_data: {
+          currency: 'usd',
+          product_data: { name: selectedPkg.name, description: selectedPkg.desc },
+          unit_amount: selectedPkg.priceInCents,
         },
-      ],
+        quantity: 1,
+      }],
       mode: 'payment',
-      success_url: `${cleanOrigin}/?status=success&session_id={CHECKOUT_SESSION_ID}&token=${sentinelToken}&tier=${tier}`,
-      cancel_url: `${cleanOrigin}/?status=cancelled`,
+      success_url: `${APP_URL}/?status=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${APP_URL}/?status=cancelled`,
       metadata: {
-        targetName,
-        targetCity,
-        targetAge,
-        targetInitial,
-        alertPhone,
         tier,
-        sentinelToken,
-        createdAt: new Date().toISOString()
+        clientRef,
+        targetName: str(body.targetName),
+        targetInitial: str(body.targetInitial, 4),
+        targetAge: str(body.targetAge, 4),
+        targetCity: str(body.targetCity),
+        alertPhone: str(body.alertPhone, 32),
+        createdAt: new Date().toISOString(),
       },
     });
 
-    return res.status(200).json({ id: session.id, url: session.url, demoMode: false, token: sentinelToken });
+    return res.status(200).json({ id: session.id, url: session.url });
   } catch (error) {
-    console.error('[STRIPE SERVERLESS ERROR]', error);
-    return res.status(500).json({ error: error.message });
+    console.error('[CHECKOUT ERROR]', error && error.message);
+    return res.status(500).json({ error: 'Could not start checkout. Please try again.' });
   }
 };

@@ -1,53 +1,67 @@
 const Stripe = require('stripe');
+const store = require('./_lib/store');
 
-const stripeKey = process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder';
-const stripe = Stripe(stripeKey);
-
-async function buffer(readable) {
+async function rawBody(readable) {
   const chunks = [];
-  for await (const chunk of readable) {
-    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
-  }
+  for await (const chunk of readable) chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
   return Buffer.concat(chunks);
 }
 
-const handler = async function(req, res) {
+const handler = async function (req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).end('Method Not Allowed');
   }
 
+  const secret = process.env.STRIPE_WEBHOOK_SECRET;
+  const key = process.env.STRIPE_SECRET_KEY;
   const sig = req.headers['stripe-signature'];
+  if (!secret || !key) {
+    console.error('[WEBHOOK] STRIPE_WEBHOOK_SECRET / STRIPE_SECRET_KEY not configured');
+    return res.status(500).json({ error: 'Webhook not configured' });
+  }
+  if (!sig) return res.status(400).json({ error: 'Missing Stripe signature' });
+
   let event;
-
   try {
-    const buf = await buffer(req);
-    const rawString = buf.toString();
-
-    if (process.env.STRIPE_WEBHOOK_SECRET && sig) {
-      event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET);
-    } else {
-      event = rawString ? JSON.parse(rawString) : req.body || {};
-    }
+    const buf = await rawBody(req);
+    event = Stripe(key).webhooks.constructEvent(buf, sig, secret);
   } catch (err) {
-    console.error(`[WEBHOOK PROCESSING NOTE]`, err.message);
-    // If webhook secret isn't configured in test mode, return 200 acknowledgment
-    return res.status(200).json({ received: true, note: 'Webhook payload received (verification optional in test mode)' });
+    console.error('[WEBHOOK] Signature verification failed:', err.message);
+    return res.status(400).json({ error: 'Invalid signature' });
   }
 
-  if (event && event.type === 'checkout.session.completed') {
-    const session = event.data?.object || {};
-    console.log(`\n✦ [PAYMENT UNLOCKED] Session: ${session.id} | Tier: ${session.metadata?.tier}`);
-    console.log(`✦ [SENTINEL KEYCARD ACTIVATED]: ${session.metadata?.sentinelToken} for ${session.metadata?.targetName} (${session.metadata?.targetCity})`);
+  if (event.type === 'checkout.session.completed') {
+    const s = event.data.object || {};
+    const md = s.metadata || {};
+    const order = {
+      sessionId: s.id,
+      clientRef: md.clientRef,
+      tier: md.tier,
+      amountTotal: s.amount_total,
+      currency: s.currency,
+      paymentStatus: s.payment_status,
+      customerEmail: (s.customer_details && s.customer_details.email) || null,
+      name: [md.targetName, md.targetInitial].filter(Boolean).join(' '),
+      city: md.targetCity,
+      age: md.targetAge,
+      phone: md.alertPhone,
+      paidAt: new Date((event.created || Date.now() / 1000) * 1000).toISOString(),
+    };
+    await store.saveOrder(order);
+    // ORDER NOTIFICATION: one structured line per paid order. View it in
+    // Vercel > aurora-elite > Logs (filter: "AE_ORDER_PAID").
+    console.log('AE_ORDER_PAID ' + JSON.stringify({
+      sessionId: order.sessionId, clientRef: order.clientRef, tier: order.tier,
+      amount: (order.amountTotal || 0) / 100, currency: order.currency,
+      email: order.customerEmail, paidAt: order.paidAt,
+    }));
+    // TODO(notifications): optionally send William an email/SMS here (e.g. Resend) once a provider is chosen.
   }
 
   return res.status(200).json({ received: true });
 };
 
-handler.config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
+handler.config = { api: { bodyParser: false } };
 module.exports = handler;
+module.exports.config = handler.config;
