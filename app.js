@@ -843,7 +843,7 @@ function publishStudioReport() {
     `;
   }
 
-  alert(`🚀 DOSSIER PUBLISHED & SMS DISPATCHED!\n\n1. Target Client Receipt & Vault updated (${newReportFinding.id}).\n2. Certified findings and executive summary staged.\n3. Automated notification sent.`);
+  alert(`Report saved in this browser session only (${newReportFinding.id}). No message or SMS has been sent to the client.`);
 }
 
 function publishAdminFinding() {
@@ -881,7 +881,7 @@ function publishAdminFinding() {
   if (sourceInput) sourceInput.value = '';
   if (commentsInput) commentsInput.value = '';
 
-  alert(`🚀 FINDING PUBLISHED & DISPATCHED!\nReal-time SMS alert sent to client target ${token}.\nFinding staged in client vault with 1-click DMCA readiness.`);
+  alert(`Note saved in this browser session only for ${token}. No message or SMS has been sent to the client.`);
 }
 
 function handleMenuClick(tierKey) {
