@@ -78,6 +78,8 @@ body.aurora-fullscreen-body {
   display: flex;
   align-items: center;
   gap: 1.4rem;
+  position: relative;
+  z-index: 2; /* above absolutely-centered brand so ENTER VAULT receives clicks */
 }
 
 .dropdown-wrapper {
@@ -141,6 +143,7 @@ body.aurora-fullscreen-body {
   gap: 1rem;
   cursor: pointer;
   user-select: none;
+  z-index: 1; /* below nav CTAs; crest triple-click still works on brand itself */
 }
 
 .brand-crest-frame {
@@ -194,6 +197,8 @@ body.aurora-fullscreen-body {
   display: flex;
   align-items: center;
   margin-left: auto;
+  position: relative;
+  z-index: 2;
 }
 
 .privacy-pill {

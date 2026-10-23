@@ -153,18 +153,24 @@ function openVaultModal(targetTab = 'new-audit', protocolKey = 'tier-1') {
   const workspace = document.getElementById('vault-gateway-modal');
   const navVaultBtn = document.getElementById('nav-vault-toggle-btn');
   if (!workspace) return;
-  
+
   switchVaultTab(targetTab);
-  selectVaultProtocol(protocolKey);
+  selectVaultProtocol(protocolKey || currentSelectedProtocol || 'tier-1');
   workspace.classList.remove('hidden');
-  if (navVaultBtn) navVaultBtn.classList.add('active');
+  if (navVaultBtn) {
+    navVaultBtn.classList.add('active');
+    navVaultBtn.setAttribute('aria-expanded', 'true');
+  }
 }
 
 function closeVaultModal() {
   const workspace = document.getElementById('vault-gateway-modal');
   const navVaultBtn = document.getElementById('nav-vault-toggle-btn');
   if (workspace) workspace.classList.add('hidden');
-  if (navVaultBtn) navVaultBtn.classList.remove('active');
+  if (navVaultBtn) {
+    navVaultBtn.classList.remove('active');
+    navVaultBtn.setAttribute('aria-expanded', 'false');
+  }
 }
 
 function switchVaultTab(tabName) {
@@ -523,20 +529,56 @@ function updateClientPhone() {
 }
 
 // On page load, handle return from Stripe
+function applyVaultHashRoute() {
+  const raw = (window.location.hash || '').replace(/^#/, '').trim().toLowerCase();
+  if (!raw) return false;
+  if (raw === 'vault' || raw === 'enter-vault' || raw === 'existing-access') {
+    openVaultModal(raw === 'existing-access' ? 'existing-access' : 'new-audit', currentSelectedProtocol);
+    return true;
+  }
+  if (/^tier-[1-4]$/.test(raw)) {
+    openVaultModal('new-audit', raw);
+    return true;
+  }
+  return false;
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const status = urlParams.get('status');
   const sessionId = urlParams.get('session_id');
 
+  // Ensure ENTER VAULT works even if an overlay or inline handler is disrupted.
+  const navVaultBtn = document.getElementById('nav-vault-toggle-btn');
+  if (navVaultBtn) {
+    navVaultBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleVaultModal();
+    });
+  }
+
+  // Deep links: /#tier-2, /#vault, /#existing-access
+  applyVaultHashRoute();
+  window.addEventListener('hashchange', applyVaultHashRoute);
+
   if (status === 'success' && sessionId) {
     verifyAccess({ session_id: sessionId }).then(access => {
       // Strip session_id from the address bar.
-      history.replaceState(null, '', window.location.pathname);
+      history.replaceState(null, '', window.location.pathname + (window.location.hash || ''));
       if (access) renderVerifiedAccess(access);
       else alert('We could not confirm your payment yet. If you were charged, please contact support with your receipt.');
     });
   }
 });
+
+// Expose vault controllers for inline onclick handlers
+window.toggleVaultModal = toggleVaultModal;
+window.openVaultModal = openVaultModal;
+window.closeVaultModal = closeVaultModal;
+window.switchVaultTab = switchVaultTab;
+window.selectVaultProtocol = selectVaultProtocol;
+window.handleMenuClick = handleMenuClick;
 
 // ==========================================================================
 // SECRET OWNER COMMAND CENTER & TRIPLE-CLICK SHIELD TRIGGER
