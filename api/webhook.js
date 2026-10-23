@@ -1,5 +1,6 @@
 const Stripe = require('stripe');
 const store = require('./_lib/store');
+const { notifyOwnerPaid } = require('./_lib/notify');
 
 async function rawBody(readable) {
   const chunks = [];
@@ -56,7 +57,7 @@ const handler = async function (req, res) {
       amount: (order.amountTotal || 0) / 100, currency: order.currency,
       email: order.customerEmail, paidAt: order.paidAt,
     }));
-    // TODO(notifications): optionally send William an email/SMS here (e.g. Resend) once a provider is chosen.
+    await notifyOwnerPaid(order);
   }
 
   return res.status(200).json({ received: true });
