@@ -142,7 +142,8 @@ function toggleVaultModal() {
   const workspace = document.getElementById('vault-gateway-modal');
   if (!workspace) return;
   if (workspace.classList.contains('hidden')) {
-    openVaultModal('new-audit', currentSelectedProtocol);
+    // ENTER VAULT → Access Dossier / Sentinel authenticate (not checkout packages)
+    openVaultModal('existing-access', currentSelectedProtocol);
   } else {
     closeVaultModal();
   }
@@ -189,6 +190,8 @@ function switchVaultTab(tabName) {
     if (tabBtnExisting) tabBtnExisting.classList.add('active');
     if (paneNew) paneNew.classList.add('hidden');
     if (paneExisting) paneExisting.classList.remove('hidden');
+    const tokenInput = document.getElementById('client-token-input');
+    if (tokenInput) setTimeout(() => tokenInput.focus(), 50);
   }
 }
 
@@ -532,8 +535,8 @@ function updateClientPhone() {
 function applyVaultHashRoute() {
   const raw = (window.location.hash || '').replace(/^#/, '').trim().toLowerCase();
   if (!raw) return false;
-  if (raw === 'vault' || raw === 'enter-vault' || raw === 'existing-access') {
-    openVaultModal(raw === 'existing-access' ? 'existing-access' : 'new-audit', currentSelectedProtocol);
+  if (raw === 'vault' || raw === 'enter-vault' || raw === 'existing-access' || raw === 'access' || raw === 'dossier') {
+    openVaultModal('existing-access', currentSelectedProtocol);
     return true;
   }
   if (/^tier-[1-4]$/.test(raw)) {
@@ -558,7 +561,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Deep links: /#tier-2, /#vault, /#existing-access
+  // Deep links: /#vault → access dossier; /#tier-2 → checkout packages
   applyVaultHashRoute();
   window.addEventListener('hashchange', applyVaultHashRoute);
 
