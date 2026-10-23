@@ -491,9 +491,9 @@
                 <span class="card-icon">📡</span>
                 <div class="card-headings">
                   <h4>Live Radar Crawlers & Inverted Interceptions</h4>
-                  <span class="card-sub">Autonomous telemetry nodes sweeping regional forums 24/7</span>
+                  <span class="card-sub">Activity on your account</span>
                 </div>
-                <span class="live-badge">● 8 NODES ONLINE</span>
+                
               </div>
 
               <!-- Live Streaming Terminal Feed -->
@@ -501,36 +501,19 @@
                 <!-- Injected dynamically via app.js -->
               </div>
 
-              <div class="ops-stats-footer">
-                <div class="stat-cell">
-                  <span class="stat-val" id="stat-groups-count">18</span>
-                  <span class="stat-lbl">AWDTSG Sub-Groups</span>
-                </div>
-                <div class="stat-cell">
-                  <span class="stat-val">4</span>
-                  <span class="stat-lbl">Tea Channels</span>
-                </div>
-                <div class="stat-cell">
-                  <span class="stat-val">1</span>
-                  <span class="stat-lbl">Seed Photo Staged</span>
-                </div>
-                <div class="stat-cell">
-                  <span class="stat-val" style="color:var(--accent-green)">ACTIVE</span>
-                  <span class="stat-lbl">Sentinel Guard</span>
-                </div>
-              </div>
+              <!-- Removed: hardcoded monitoring stats (no real data source). -->
 
               <!-- Alert Destination & Notification Settings -->
               <div class="alert-settings-box">
                 <div class="settings-title-row">
                   <span class="settings-lbl">📱 REAL-TIME SMS ALERT DESTINATION</span>
-                  <span class="active-badge-sm">SMS ACTIVE</span>
+                  
                 </div>
                 <div class="settings-input-group">
                   <input type="text" id="dash-phone-input" value="" placeholder="Enter phone for instant alert" autocomplete="off">
                   <button type="button" class="btn-save-phone" onclick="updateClientPhone()">SAVE NUMBER</button>
                 </div>
-                <span class="settings-hint">Direct SMS alert is dispatched within 8 seconds of any regional forum thread indexing your name.</span>
+                <span class="settings-hint">Optional contact number for updates about your order.</span>
               </div>
             </div>
 
@@ -602,7 +585,7 @@
         <form onsubmit="event.preventDefault(); authenticateAdmin();" class="admin-auth-form">
           <div class="input-field">
             <label for="admin-passphrase-input">MASTER SOVEREIGN PASSPHRASE</label>
-            <input type="password" id="admin-passphrase-input" placeholder="Enter passphrase (default: AURORA1988)" required autocomplete="off">
+            <input type="password" id="admin-passphrase-input" placeholder="Enter passphrase" required autocomplete="off">
           </div>
           <button type="submit" class="cta-gold-btn mt-1">
             <span>AUTHENTICATE & UNLOCK OWNER GRID</span>
@@ -648,58 +631,40 @@
           <div class="owner-kpi-card">
             <div class="kpi-top">
               <span class="kpi-lbl">GROSS REVENUE (30D)</span>
-              <span class="kpi-badge-gold">STRIPE LIVE</span>
+              
             </div>
-            <div class="kpi-val" id="owner-stat-revenue">$18,450.00</div>
-            <div class="kpi-sub">
-              <span>Today: <strong style="color:var(--accent-green)">+$850.00</strong></span>
-              <span>•</span>
-              <span>Descriptor: <code class="mono-inline">CS*SERVICELOG</code></span>
-            </div>
+            <div class="kpi-val" id="owner-stat-revenue">—</div>
+            <div class="kpi-sub"><span>Not connected. See Stripe Dashboard / Vercel logs (AE_ORDER_PAID).</span></div>
           </div>
 
           <!-- Metric 2: Cross-App Ads Ran -->
           <div class="owner-kpi-card">
             <div class="kpi-top">
               <span class="kpi-lbl">CROSS-APP AD IMPRESSIONS</span>
-              <span class="kpi-badge-cyan">● ACTIVE ADS</span>
+              
             </div>
-            <div class="kpi-val">142,850 <small style="font-size:0.9rem; color:var(--text-muted)">Plays</small></div>
-            <div class="kpi-sub">
-              <span>TikTok: <strong>68.2k</strong></span>
-              <span>•</span>
-              <span>IG Reels: <strong>44.1k</strong></span>
-              <span>•</span>
-              <span>Reddit: <strong>30.5k</strong></span>
-            </div>
+            <div class="kpi-val">—</div>
+            <div class="kpi-sub"><span>Not connected. See Stripe Dashboard / Vercel logs (AE_ORDER_PAID).</span></div>
           </div>
 
           <!-- Metric 3: Active Sentinel Retainers -->
           <div class="owner-kpi-card">
             <div class="kpi-top">
               <span class="kpi-lbl">30-DAY SENTINEL RETAINERS</span>
-              <span class="kpi-badge-green">48 CLIENTS</span>
+              
             </div>
-            <div class="kpi-val">$4,800.00 <small style="font-size:0.9rem; color:var(--gold-light)">MRR</small></div>
-            <div class="kpi-sub">
-              <span>Avg Retainer: <strong>$100.00</strong></span>
-              <span>•</span>
-              <span>Renewal Rate: <strong>72.4%</strong></span>
-            </div>
+            <div class="kpi-val">—</div>
+            <div class="kpi-sub"><span>Not connected. See Stripe Dashboard / Vercel logs (AE_ORDER_PAID).</span></div>
           </div>
 
           <!-- Metric 4: Crawler Nodes & Swiss Proxy -->
           <div class="owner-kpi-card">
             <div class="kpi-top">
               <span class="kpi-lbl">CRAWLER NODES & PROXIES</span>
-              <span class="kpi-badge-green">100% HEALTHY</span>
+              
             </div>
-            <div class="kpi-val">8 Nodes <small style="font-size:0.9rem; color:var(--accent-green)">Online</small></div>
-            <div class="kpi-sub">
-              <span>Daily Scans: <strong>2,410</strong></span>
-              <span>•</span>
-              <span>Swiss Node: <strong>Active</strong></span>
-            </div>
+            <div class="kpi-val">—</div>
+            <div class="kpi-sub"><span>Not connected. See Stripe Dashboard / Vercel logs (AE_ORDER_PAID).</span></div>
           </div>
 
         </div>
@@ -730,30 +695,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td><strong>"Sovereign Shield Hook" (Story 01)</strong></td>
-                    <td><span class="plat-tag tiktok">TikTok</span></td>
-                    <td>68,240</td>
-                    <td>3,140</td>
-                    <td>4.6%</td>
-                    <td><span class="rev-tag">14 ($650)</span></td>
-                  </tr>
-                  <tr>
-                    <td><strong>"Tea Platform Radar" (Story 02)</strong></td>
-                    <td><span class="plat-tag instagram">IG Reels</span></td>
-                    <td>44,110</td>
-                    <td>1,890</td>
-                    <td>4.2%</td>
-                    <td><span class="rev-tag">9 ($425)</span></td>
-                  </tr>
-                  <tr>
-                    <td><strong>"Dating Defense Dossier" (Story 03)</strong></td>
-                    <td><span class="plat-tag reddit">Reddit</span></td>
-                    <td>30,500</td>
-                    <td>980</td>
-                    <td>3.2%</td>
-                    <td><span class="rev-tag">6 ($375)</span></td>
-                  </tr>
+                  <tr><td colspan="6">No ad metrics connected.</td></tr>
                 </tbody>
               </table>
             </div>
@@ -779,9 +721,9 @@
             <div class="panel-header-row">
               <div class="panel-title-group">
                 <span class="panel-icon">🚀</span>
-                <h4>Direct Threat Interception Publisher & SMS Broadcaster</h4>
+                <h4>Owner Notes (local only, no SMS)</h4>
               </div>
-              <span class="live-badge">REAL-TIME DISPATCH</span>
+              
             </div>
 
             <form id="admin-publish-finding-form" class="admin-form-box" onsubmit="event.preventDefault(); publishAdminFinding();">
@@ -819,7 +761,7 @@
               </div>
 
               <button type="submit" class="cta-gold-btn" id="btn-publish-finding">
-                <span>🚀 DISPATCH REAL-TIME SMS ALERT & PUBLISH TO CLIENT VAULT</span>
+                <span>SAVE NOTE (NO SMS IS SENT)</span>
                 <span>→</span>
               </button>
             </form>
@@ -957,7 +899,7 @@
               </div>
 
               <button type="submit" class="cta-gold-btn mt-05">
-                <span>🚀 PUBLISH DOSSIER & DISPATCH CLIENT SMS</span>
+                <span>SAVE REPORT (NO SMS IS SENT)</span>
                 <span>→</span>
               </button>
             </form>

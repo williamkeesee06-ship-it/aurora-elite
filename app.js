@@ -283,26 +283,6 @@ async function submitVaultAudit() {
   const protocol = TIER_DATA[currentSelectedProtocol];
   const submitBtn = document.getElementById('vault-submit-btn');
 
-  const fullName = lastInitial ? `${firstName} ${lastInitial}` : firstName;
-  const tokenPrefix = currentSelectedProtocol === 'tier-4' ? 'AE-SENTINEL-' : 'AE-AUDIT-';
-  const assignedToken = tokenPrefix + Math.floor(1000 + Math.random() * 9000);
-
-  // Save submitted client order data to localStorage
-  const activeOrder = {
-    targetName: fullName,
-    targetAge: age,
-    targetCity: metro,
-    alertPhone: alertPhone,
-    tier: currentSelectedProtocol,
-    tierTitle: protocol.title,
-    token: assignedToken,
-    timestamp: new Date().toISOString()
-  };
-  localStorage.setItem('ae_current_order', JSON.stringify(activeOrder));
-
-  // Push to local operator queue
-  registerNewOrderToAdminQueue(activeOrder);
-
   if (submitBtn) {
     submitBtn.innerHTML = `<span>ROUTING TO ENCRYPTED STRIPE GATEWAY...</span>`;
     submitBtn.disabled = true;
@@ -321,38 +301,17 @@ async function submitVaultAudit() {
         alertPhone: alertPhone
       })
     });
-
     const data = await response.json();
-
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      throw new Error(data.error || 'Failed to generate checkout session');
-    }
+    if (!response.ok || !data.url) throw new Error(data.error || 'Failed to start checkout');
+    window.location.href = data.url;
   } catch (err) {
     console.error('Stripe Checkout Error:', err);
-    // Fallback simulation for testing
-    window.location.href = `/?status=success&token=${assignedToken}&tier=${currentSelectedProtocol}`;
+    alert('Checkout could not be started. You have not been charged. Please try again shortly.');
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `<span>${protocol.ctaText}</span>`;
+    }
   }
-}
-
-// Register order into admin queue
-function registerNewOrderToAdminQueue(order) {
-  const newAdminClient = {
-    token: order.token,
-    name: order.targetName,
-    metro: order.targetCity + ` (Age ${order.targetAge})`,
-    phone: order.alertPhone || 'N/A',
-    tier: order.tier,
-    tierTitle: order.tierTitle || 'Package I',
-    daysRemaining: order.tier === 'tier-4' ? 30 : 0
-  };
-
-  const existingIdx = adminClients.findIndex(c => c.token === order.token);
-  if (existingIdx === -1) {
-    adminClients.unshift(newAdminClient);
-  }
-  updateAdminClientSelect();
 }
 
 // ==========================================================================
@@ -364,19 +323,31 @@ let radarStreamInterval = null;
 let currentClientToken = '';
 let clientFindings = [];
 
-function handlePostPaymentReturn(token, tier) {
-  openVaultModal('existing-access');
-  
-  let orderData = null;
+// Exchange a Stripe session_id or a stored signed token for verified access.
+async function verifyAccess(payload) {
   try {
-    const stored = localStorage.getItem('ae_current_order');
-    if (stored) orderData = JSON.parse(stored);
-  } catch(e) {}
+    const res = await fetch('/api/verify-token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    return res.ok && data.valid ? data : null;
+  } catch (e) { return null; }
+}
 
-  const targetName = orderData?.targetName || 'Vetted Client';
-  const targetMetro = orderData?.targetCity || 'Metro Area';
-  const effectiveToken = token || orderData?.token || 'AE-AUDIT-8842';
-  const effectiveTier = tier || orderData?.tier || 'tier-1';
+function renderVerifiedAccess(access) {
+  if (access.token) localStorage.setItem('ae_access_token', access.token);
+  showClientView(access.clientRef, access.tier);
+}
+
+function showClientView(clientRef, tier) {
+  openVaultModal('existing-access');
+  const targetName = 'Verified Client';
+  const targetMetro = '';
+  const effectiveToken = clientRef || '';
+  const effectiveTier = tier || 'tier-1';
+  const orderData = null;
 
   const loginBox = document.getElementById('sentinel-login-box');
   const statusReceiptView = document.getElementById('audit-status-view');
@@ -408,7 +379,7 @@ function handlePostPaymentReturn(token, tier) {
           <span class="notice-icon">🛡️</span>
           <div>
             <strong>CONFIDENTIAL DISCOVERY QUERY IN PROGRESS</strong>
-            <p>Your search parameters for <strong>${targetName}</strong> (${targetMetro}) are currently being conducted across closed networks and Tea for Women boards. Once the sweep is certified by the operator, your certified binary result will appear here.</p>
+            <p>Your search parameters for <strong>${targetName}</strong> (${targetMetro}) have been received with your verified payment. Your result will be delivered once your review is complete.</p>
           </div>
         </div>
       `;
@@ -425,35 +396,24 @@ function handlePostPaymentReturn(token, tier) {
     const phoneInput = document.getElementById('dash-phone-input');
 
     if (nameEl) nameEl.textContent = targetName.toUpperCase();
-    if (metroEl) metroEl.textContent = `${targetMetro.toUpperCase()} (18 MONITORED NODES)`;
+    if (metroEl) metroEl.textContent = targetMetro.toUpperCase();
     if (keyEl) keyEl.textContent = effectiveToken;
     if (phoneInput && orderData?.alertPhone) phoneInput.value = orderData.alertPhone;
 
     initSentinelClock();
-    initRadarStream();
     renderClientThreatFeed();
   }
 }
 
-function verifyClientToken() {
-  const token = document.getElementById('client-token-input')?.value.trim().toUpperCase();
+async function verifyClientToken() {
+  const token = document.getElementById('client-token-input')?.value.trim();
   if (!token) return;
-
-  // Check if it matches an admin client or order
-  const client = adminClients.find(c => c.token === token);
-  const tier = client?.tier || (token.startsWith('AE-SENTINEL') ? 'tier-4' : 'tier-1');
-  
-  if (client) {
-    const mockOrder = {
-      targetName: client.name,
-      targetCity: client.metro,
-      tier: tier,
-      token: client.token
-    };
-    localStorage.setItem('ae_current_order', JSON.stringify(mockOrder));
+  const access = await verifyAccess({ token });
+  if (!access) {
+    alert('Access token not recognized or expired.');
+    return;
   }
-
-  handlePostPaymentReturn(token, tier);
+  renderVerifiedAccess({ ...access, token });
 }
 
 function lockSentinelSession() {
@@ -494,29 +454,7 @@ function initSentinelClock() {
   }, 1000);
 }
 
-const sampleRadarLogs = [
-  { node: "NODE-01 [SWISS]", msg: "AWDTSG regional sweep completed. 0 matching records." },
-  { node: "NODE-04 [ZURICH]", msg: "Biometric neural analysis: 12 new image threads evaluated -> 0 matches." },
-  { node: "NODE-02 [GENEVA]", msg: "Tea for Women private salon intercepted. Clean status verified." },
-  { node: "NODE-08 [SENTINEL]", msg: "Crawled 18 dating discussion clusters. Zero defamatory mentions." },
-  { node: "NODE-06 [STEALTH]", msg: "Inverted probe executed across secret regional Facebook groups. 0 traces." }
-];
-
-function initRadarStream() {
-  const feed = document.getElementById('radar-live-feed');
-  if (!feed) return;
-
-  feed.innerHTML = '';
-  sampleRadarLogs.forEach(log => {
-    appendRadarLog(log.node, log.msg);
-  });
-
-  if (radarStreamInterval) clearInterval(radarStreamInterval);
-  radarStreamInterval = setInterval(() => {
-    const randomLog = sampleRadarLogs[Math.floor(Math.random() * sampleRadarLogs.length)];
-    appendRadarLog(randomLog.node, randomLog.msg);
-  }, 4500);
-}
+// Removed: simulated "radar" telemetry log stream (no real crawler exists).
 
 function appendRadarLog(node, msg) {
   const feed = document.getElementById('radar-live-feed');
@@ -543,8 +481,8 @@ function renderClientThreatFeed() {
     container.innerHTML = `
       <div class="perimeter-status-box" style="padding:1.5rem; text-align:center; background:rgba(0,230,118,0.05); border:1px dashed rgba(0,230,118,0.3); border-radius:8px;">
         <span style="font-size:1.5rem; color:var(--accent-green)">✓</span>
-        <strong style="display:block; font-size:0.85rem; color:var(--accent-green); margin-top:0.3rem;">CLEAN PERIMETER ACTIVE</strong>
-        <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">Zero defamatory records indexed across all monitored nodes.</p>
+        <strong style="display:block; font-size:0.85rem; color:var(--accent-green); margin-top:0.3rem;">NO RESULTS YET</strong>
+        <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">No results have been published to your account yet.</p>
       </div>
     `;
     return;
@@ -581,18 +519,22 @@ function renderClientThreatFeed() {
 function updateClientPhone() {
   const phone = document.getElementById('dash-phone-input')?.value;
   if (!phone) return;
-  alert(`✓ Alert destination updated to ${phone}.\nReal-time SMS alerts will be dispatched within 8 seconds of any detected mention.`);
+  alert(`Contact number noted: ${phone}`);
 }
 
 // On page load, handle return from Stripe
 window.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const status = urlParams.get('status');
-  const token = urlParams.get('token');
-  const tier = urlParams.get('tier');
+  const sessionId = urlParams.get('session_id');
 
-  if (status === 'success') {
-    handlePostPaymentReturn(token, tier);
+  if (status === 'success' && sessionId) {
+    verifyAccess({ session_id: sessionId }).then(access => {
+      // Strip session_id from the address bar.
+      history.replaceState(null, '', window.location.pathname);
+      if (access) renderVerifiedAccess(access);
+      else alert('We could not confirm your payment yet. If you were charged, please contact support with your receipt.');
+    });
   }
 });
 
@@ -636,8 +578,11 @@ function closeAdminAuthModal() {
   if (modal) modal.classList.add('hidden');
 }
 
+let adminSessionToken = sessionStorage.getItem('ae_admin_token') || '';
+
 async function authenticateAdmin() {
-  const passphrase = document.getElementById('admin-passphrase-input')?.value;
+  const input = document.getElementById('admin-passphrase-input');
+  const passphrase = input?.value;
   if (!passphrase) return;
 
   try {
@@ -647,21 +592,33 @@ async function authenticateAdmin() {
       body: JSON.stringify({ passphrase })
     });
     const data = await res.json();
-
-    if (data.success) {
+    if (res.ok && data.success && data.sessionToken) {
+      adminSessionToken = data.sessionToken;
+      sessionStorage.setItem('ae_admin_token', adminSessionToken);
+      if (input) input.value = '';
       closeAdminAuthModal();
       openAdminPortal();
     } else {
-      alert('Access Denied: Invalid Master Passphrase.');
+      alert('Access Denied.');
     }
   } catch (err) {
-    if (passphrase === 'AURORA1988' || passphrase === 'aurora-elite-ops') {
-      closeAdminAuthModal();
-      openAdminPortal();
-    } else {
-      alert('Access Denied: Invalid Master Passphrase.');
-    }
+    alert('Admin login unavailable. Please try again.');
   }
+}
+
+async function adminFetch(url, opts = {}) {
+  const res = await fetch(url, {
+    ...opts,
+    headers: { ...(opts.headers || {}), 'Content-Type': 'application/json', Authorization: `Bearer ${adminSessionToken}` }
+  });
+  if (res.status === 401) {
+    adminSessionToken = '';
+    sessionStorage.removeItem('ae_admin_token');
+    closeAdminPortal();
+    openAdminAuthModal();
+    throw new Error('Admin session expired');
+  }
+  return res.json();
 }
 
 function openAdminPortal() {
@@ -699,15 +656,23 @@ function switchOwnerView(viewName) {
 // Dynamic Client & Audit Roster
 let adminClients = [];
 
-function loadAdminRoster() {
-  // Pull stored order if available
+const escapeHtml = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+
+async function loadAdminRoster() {
   try {
-    const stored = localStorage.getItem('ae_current_order');
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      registerNewOrderToAdminQueue(parsed);
-    }
-  } catch(e) {}
+    const data = await adminFetch('/api/admin-clients');
+    adminClients = (data.clients || []).map(o => ({
+      token: escapeHtml(o.clientRef),
+      name: escapeHtml(o.name || o.customerEmail || 'Customer'),
+      metro: escapeHtml(o.city || ''),
+      phone: escapeHtml(o.phone || 'N/A'),
+      tier: o.tier,
+      tierTitle: escapeHtml((TIER_DATA[o.tier] || {}).title || o.tier),
+      daysRemaining: o.tier === 'tier-4' ? 30 : 0
+    }));
+  } catch (e) {
+    adminClients = [];
+  }
 
   const list = document.getElementById('admin-client-roster-list');
   const countBadge = document.getElementById('admin-client-count');
@@ -718,7 +683,7 @@ function loadAdminRoster() {
   if (adminClients.length === 0) {
     list.innerHTML = `
       <div style="padding:1.5rem; text-align:center; color:var(--text-muted); font-size:0.8rem;">
-        No client orders in queue. Place an audit or test checkout to see orders live!
+        No paid orders recorded yet. Paid orders appear here after Stripe confirms payment.
       </div>
     `;
     return;
@@ -804,32 +769,8 @@ function copyTargetSearchQuery() {
 }
 
 // 1-Click Fast-Fill Report Templates
-const REPORT_TEMPLATES = {
-  clean: {
-    status: 'CLEAN',
-    red: 0,
-    green: 2,
-    source: 'Tea for Women & Regional Review Channels',
-    transcript: 'Zero matching defamatory threads or unverified claims found across all monitored regional groups.',
-    summary: 'VERIFIED CLEAN PERIMETER: Client reputation is pristine. Zero defamatory records found.'
-  },
-  caution: {
-    status: 'MENTIONS_FOUND',
-    red: 0,
-    green: 1,
-    source: 'AWDTSG Regional Sub-Group',
-    transcript: '"Has anyone gone out with this guy? Met on Hinge, seemed cool but just checking before drinks tomorrow."',
-    summary: 'MILD DATING INQUIRY: Low-risk pre-date identity inquiry. Multiple respondents confirmed normal gentleman demeanor.'
-  },
-  redflag: {
-    status: 'MENTIONS_FOUND',
-    red: 1,
-    green: 0,
-    source: 'Tea for Women — Private Channel',
-    transcript: '"Caution with this guy: Ghosted my friend after 3 dates and gave conflicting information."',
-    summary: 'ACTIONABLE DEFAMATORY CLAIM: Unverified personal gossip. DMCA cease & desist removal packet recommended.'
-  }
-};
+// Removed: pre-written sample findings/transcripts.
+const REPORT_TEMPLATES = {};
 
 function applyReportTemplate(templateKey) {
   const tpl = REPORT_TEMPLATES[templateKey];
@@ -902,7 +843,7 @@ function publishStudioReport() {
     `;
   }
 
-  alert(`🚀 DOSSIER PUBLISHED & SMS DISPATCHED!\n\n1. Target Client Receipt & Vault updated (${newReportFinding.id}).\n2. Certified findings and executive summary staged.\n3. Automated notification sent.`);
+  alert(`Report saved in this browser session only (${newReportFinding.id}). No message or SMS has been sent to the client.`);
 }
 
 function publishAdminFinding() {
@@ -940,7 +881,7 @@ function publishAdminFinding() {
   if (sourceInput) sourceInput.value = '';
   if (commentsInput) commentsInput.value = '';
 
-  alert(`🚀 FINDING PUBLISHED & DISPATCHED!\nReal-time SMS alert sent to client target ${token}.\nFinding staged in client vault with 1-click DMCA readiness.`);
+  alert(`Note saved in this browser session only for ${token}. No message or SMS has been sent to the client.`);
 }
 
 function handleMenuClick(tierKey) {

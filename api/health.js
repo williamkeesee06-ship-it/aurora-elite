@@ -1,8 +1,5 @@
+const { applyCors } = require('./_lib/security');
 module.exports = function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.status(200).json({
-    status: 'active',
-    platform: 'AURORA ELITE Vercel Native Edge Serverless Engine',
-    timestamp: new Date().toISOString()
-  });
+  if (!applyCors(req, res, 'GET,OPTIONS')) return;
+  res.status(200).json({ status: 'active', timestamp: new Date().toISOString() });
 };

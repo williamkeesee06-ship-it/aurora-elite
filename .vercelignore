@@ -1,0 +1,8 @@
+# Internal docs / tooling: never deployed or publicly served
+internal/
+scratch/
+*.md
+*.py
+campaign_dispatch_telemetry.json
+.env*
+server.js
