@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AURORA ELITE | Guardians of Reputation</title>
-  <meta name="description" content="Secure your legacy. Vet connections with elite discretion. Anonymous dating reputation audit & Tea platform intelligence for gentlemen.">
+  <meta name="description" content="Secure your legacy. Vet connections with elite discretion. Anonymous dating reputation audit & private Tea platform checks for gentlemen.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -65,6 +65,28 @@
     </div>
     
     <div class="rail-scroll-content">
+      <!-- Tier 0: $9 Entry: Single Name Check -->
+      <a href="#tier-0" class="dropdown-item" onclick="handleMenuClick('tier-0')">
+        <div class="neon-laser-glyph">
+          <span class="item-roman">0</span>
+        </div>
+        <div class="item-info">
+          <div class="item-title-row">
+            <span class="item-title">Single Name Check</span>
+            <span class="item-price-tag">$9</span>
+          </div>
+          <span class="item-desc">One name, one quiet answer. Are they talking about you? Private, untraceable.</span>
+        </div>
+      </a>
+
+      <a href="#sample-report" class="dropdown-item" onclick="closeDropdownIfOpen(); openSampleReport(); return false;">
+        <div class="neon-laser-glyph"><span class="item-roman">◇</span></div>
+        <div class="item-info">
+          <div class="item-title-row"><span class="item-title">View a Sample Report</span><span class="item-price-tag">EXAMPLE</span></div>
+          <span class="item-desc">See exactly what a dossier looks like. Fictional example — not real data.</span>
+        </div>
+      </a>
+
       <!-- Tier 1: $25 Protocol I: Preliminary Reconnaissance -->
       <a href="#tier-1" class="dropdown-item" onclick="handleMenuClick('tier-1')">
         <div class="neon-laser-glyph">
@@ -218,6 +240,18 @@
             <span class="col-kicker">SELECT RECONNAISSANCE PACKAGE</span>
             
             <div class="protocol-cards-stack">
+              <!-- Protocol 0 -->
+              <div class="protocol-card" id="pbtn-tier-0" onclick="selectVaultProtocol('tier-0')">
+                <div class="p-card-header">
+                  <span class="p-card-roman">0</span>
+                  <div class="p-card-headings">
+                    <span class="p-card-title">Single Name Check</span>
+                    <span class="p-card-sub">One Discreet Yes / No</span>
+                  </div>
+                  <span class="p-card-price">$9</span>
+                </div>
+              </div>
+
               <!-- Protocol 1 -->
               <div class="protocol-card active" id="pbtn-tier-1" onclick="selectVaultProtocol('tier-1')">
                 <div class="p-card-header">
@@ -434,7 +468,7 @@
                 <span class="notice-icon">🛡️</span>
                 <div>
                   <strong>ORDER QUEUED FOR OPERATOR INVESTIGATION</strong>
-                  <p>Your reconnaissance parameters have been dispatched to our intelligence team. Once the operator certifies the search across closed regional groups, your verified Binary Discovery result and executive report will unlock right here.</p>
+                  <p>Your reconnaissance parameters have been dispatched to our private operators. Once the operator certifies the search across closed regional groups, your verified Binary Discovery result and executive report will unlock right here.</p>
                 </div>
               </div>
             </div>
@@ -930,6 +964,22 @@
 
   <script src="app.js"></script>
 
+
+  <!-- SAMPLE REPORT MODAL — FICTIONAL EXAMPLE ONLY, NO REAL DATA -->
+  <div id="sample-report-modal" onclick="if(event.target===this)closeSampleReport()" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.85);align-items:center;justify-content:center;padding:20px;">
+    <div style="max-width:560px;width:100%;max-height:90vh;overflow:auto;background:#0b0b10;border:1px solid #c9a95c;border-radius:12px;padding:28px;color:#e8e2d0;font-family:inherit;">
+      <div style="background:#c9a95c;color:#0b0b10;font-weight:700;text-align:center;padding:8px;border-radius:6px;letter-spacing:.08em;">EXAMPLE — NOT REAL DATA</div>
+      <h3 style="margin:18px 0 4px;letter-spacing:.12em;">SAMPLE DOSSIER • AE-EXAMPLE01</h3>
+      <p style="opacity:.7;margin:0 0 16px;">Subject: "Johnny Example", 34, Faketown, USA (fictional person)</p>
+      <p><strong>Presence Result:</strong> DISCUSSED — 3 mentions found</p>
+      <p><strong>Flag Ratio:</strong> 2 green / 1 red</p>
+      <p><strong>Summary (fictional):</strong> Mentions in two closed review circles. Most posts positive ("polite, paid for dinner"). One post claims he "went quiet after date two."</p>
+      <p><strong>Excerpt (fictional, redacted):</strong> <em>"Has anyone dated J██████ from Faketown? He seemed sweet…"</em> — posted by "Jane Placeholder"</p>
+      <p><strong>Recommendation:</strong> Low concern. Optional 30-day alert guard.</p>
+      <p style="font-size:.8em;opacity:.6;margin-top:16px;">All names, places, and quotes above are invented to illustrate the report format. This is not a real person and contains no real platform data.</p>
+      <button onclick="closeSampleReport()" style="margin-top:12px;width:100%;padding:12px;background:transparent;border:1px solid #c9a95c;color:#c9a95c;border-radius:6px;cursor:pointer;letter-spacing:.1em;">CLOSE EXAMPLE</button>
+    </div>
+  </div>
   <!-- Vercel Web Analytics (Hobby free tier) -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };

@@ -5,6 +5,11 @@ const crypto = require('crypto');
 const { APP_URL, applyCors, parseBody } = require('./_lib/security');
 
 const PACKAGES = {
+  'tier-0': {
+    name: 'Aurora Elite — Single Name Check',
+    desc: 'One private, discreet check: is your name being discussed? Yes or no, delivered in confidence.',
+    priceInCents: 900, // $9.00
+  },
   'tier-1': {
     name: 'Aurora Elite — Preliminary Reconnaissance',
     desc: 'Confidential discovery query across closed dating networks & registries.',
@@ -63,6 +68,13 @@ module.exports = async function handler(req, res) {
         quantity: 1,
       }],
       mode: 'payment',
+      payment_intent_data: {
+        statement_descriptor_suffix: 'AURORA ELITE',
+        description: selectedPkg.name,
+      },
+      custom_text: {
+        submit: { message: 'You are paying Aurora Elite. Fully private: discreet billing, no notifications, no trace.' },
+      },
       success_url: `${APP_URL}/?status=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${APP_URL}/?status=cancelled`,
       metadata: {

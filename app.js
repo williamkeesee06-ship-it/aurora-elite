@@ -48,6 +48,23 @@ document.addEventListener('click', function(event) {
 
 // Reconnaissance Packages Specifications Dictionary
 const TIER_DATA = {
+  'tier-0': {
+    tag: 'ENTRY ACCESS ACTIVE',
+    title: 'Entry: Single Name Check',
+    price: '$9.00',
+    priceVal: 9,
+    summaryDesc: 'One name. One quiet answer. A discreet yes-or-no check on whether you are being discussed in private dating review circles.',
+    requiresPhoto: false,
+    requiresLastInitial: false,
+    requiresAlertPhone: false,
+    inputs: ['First Name', 'Age', 'Dating Metro Location / City'],
+    deliverables: [
+      '🔍 <strong>Single Discreet Answer:</strong> Are you being talked about? A private yes or no.',
+      '🛡️ <strong>Zero Trace:</strong> No notifications, no footprints, no one knows you looked.',
+      '⬆️ <strong>Upgrade Anytime:</strong> Move up to a full package whenever you want the details.'
+    ],
+    ctaText: 'PROCEED TO ENCRYPTED STRIPE CHECKOUT • $9.00'
+  },
   'tier-1': {
     tag: 'PACKAGE I ACTIVE',
     title: 'Package I: Preliminary Reconnaissance',
@@ -200,7 +217,7 @@ function selectVaultProtocol(protocolKey) {
   const data = TIER_DATA[protocolKey];
   if (!data) return;
 
-  ['tier-1', 'tier-2', 'tier-3', 'tier-4'].forEach(k => {
+  ['tier-0', 'tier-1', 'tier-2', 'tier-3', 'tier-4'].forEach(k => {
     const card = document.getElementById(`pbtn-${k}`);
     if (card) {
       if (k === protocolKey) card.classList.add('active');
@@ -365,7 +382,7 @@ function showClientView(clientRef, tier) {
   if (loginBox) loginBox.classList.add('hidden');
 
   // IF TIER 1, 2, OR 3: Display clean Investigation Status receipt (NO 30-day timer)
-  if (effectiveTier === 'tier-1' || effectiveTier === 'tier-2' || effectiveTier === 'tier-3') {
+  if (effectiveTier === 'tier-0' || effectiveTier === 'tier-1' || effectiveTier === 'tier-2' || effectiveTier === 'tier-3') {
     if (sentinelDashView) sentinelDashView.classList.add('hidden');
     if (statusReceiptView) statusReceiptView.classList.remove('hidden');
 
@@ -539,7 +556,7 @@ function applyVaultHashRoute() {
     openVaultModal('existing-access', currentSelectedProtocol);
     return true;
   }
-  if (/^tier-[1-4]$/.test(raw)) {
+  if (/^tier-[0-4]$/.test(raw)) {
     openVaultModal('new-audit', raw);
     return true;
   }
@@ -880,7 +897,7 @@ function publishStudioReport() {
   if (findingsArea) {
     findingsArea.innerHTML = `
       <div style="background:rgba(0,0,0,0.5); border:1px solid var(--border-gold); border-radius:10px; padding:1.4rem;">
-        <span style="font-family:var(--font-mono); font-size:0.7rem; color:var(--gold-primary);">OFFICIAL INTELLIGENCE FINDING:</span>
+        <span style="font-family:var(--font-mono); font-size:0.7rem; color:var(--gold-primary);">OFFICIAL CONFIDENTIAL FINDING:</span>
         <h4 style="font-family:var(--font-serif); font-size:1.1rem; color:var(--text-main); margin:0.4rem 0;">${severityLabel}</h4>
         <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">${newReportFinding.transcript}</p>
         <p style="font-size:0.75rem; color:var(--gold-light); margin-top:0.6rem;"><em>${newReportFinding.commentsSummary}</em></p>
@@ -963,3 +980,7 @@ function closeFeatureModal() {
   const modal = document.getElementById('feature-detail-modal');
   if (modal) modal.classList.add('hidden');
 }
+
+// Sample report modal (fictional example only)
+function openSampleReport(){var m=document.getElementById('sample-report-modal');if(m)m.style.display='flex';}
+function closeSampleReport(){var m=document.getElementById('sample-report-modal');if(m)m.style.display='none';}
