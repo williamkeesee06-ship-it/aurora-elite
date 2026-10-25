@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="sections.css">
 </head>
 <body class="aurora-fullscreen-body">
 
@@ -207,6 +208,47 @@
       </div>
     </div>
   </main>
+
+  <!-- ===== Homepage explainer sections (mockup A) ===== -->
+  <div class="aes" onclick="closeDropdownIfOpen()">
+    <section class="aes-sec"><div class="aes-wrap aes-center">
+      <div class="aes-eyebrow">Private · Discreet · For gentlemen</div>
+      <h2 style="font-size:44px;margin-bottom:18px"><span class="aes-gold">Are they talking</span> about you?</h2>
+      <p class="aes-m" style="max-width:640px;margin:0 auto 32px;font-size:17px">Give us one name. We quietly check dating-safety and Tea-style community groups and send you a private report of what's being said. No one is ever contacted.</p>
+      <button class="aes-btn" onclick="openVaultModal('new-audit','tier-0')">CHECK A NAME — $9</button>
+      <button class="aes-btn2" onclick="openSampleReport()">VIEW SAMPLE REPORT</button>
+    </div></section>
+    <section class="aes-sec aes-alt"><div class="aes-wrap">
+      <div class="aes-eyebrow aes-center">How it works</div><h2 class="aes-center">Three quiet steps</h2>
+      <div class="aes-grid3">
+        <div class="aes-card"><div class="aes-num aes-gold">I</div><h3>Submit a name, privately</h3><p class="aes-m">Enter only the name and city. No account and no real name of yours required. Nothing is shared with anyone.</p></div>
+        <div class="aes-card"><div class="aes-num aes-gold">II</div><h3>A discreet check</h3><p class="aes-m">The name is personally run through dating-safety and Tea-style community groups. Quietly. The person is never contacted.</p></div>
+        <div class="aes-card"><div class="aes-num aes-gold">III</div><h3>Your private report</h3><p class="aes-m">You receive a clear written summary of what was or wasn't found, delivered only to you.</p></div>
+      </div>
+    </div></section>
+    <section class="aes-sec"><div class="aes-wrap aes-grid2">
+      <div><div class="aes-eyebrow">What you get</div><h2>A clear, private answer</h2>
+        <div class="aes-item"><span style="color:var(--gold-primary)">◆</span> <b>Mention status</b><div class="aes-m">Whether the name appears in community posts, and where.</div></div>
+        <div class="aes-item"><span style="color:var(--gold-primary)">◆</span> <b>Summary of what's said</b><div class="aes-m">Plain-language recap of any posts or comments found.</div></div>
+        <div class="aes-item"><span style="color:var(--gold-primary)">◆</span> <b>Flag level</b><div class="aes-m">A simple Clear / Mentioned / Flagged rating.</div></div>
+        <div class="aes-item"><span style="color:var(--gold-primary)">◆</span> <b>Total discretion</b><div class="aes-m">No contact with anyone. Your request stays private.</div></div>
+      </div>
+      <div class="aes-card aes-report"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:18px"><span class="aes-eyebrow">Private Report</span><span class="aes-tag">EXAMPLE — NOT REAL DATA</span></div>
+        <div class="mono"><div class="aes-m">SUBJECT</div><div>"John Example" · Sample City</div><div class="aes-m" style="margin-top:8px">STATUS</div><div style="color:var(--gold-primary)">◆ MENTIONED — 1 post found</div><div class="aes-m" style="margin-top:8px">SUMMARY</div><div style="font-family:var(--font-sans);color:#cfd4dc">A fictional sample post asks whether anyone has dated this person. Replies are neutral. No serious flags.</div></div></div>
+    </div></section>
+    <section class="aes-sec aes-alt"><div class="aes-wrap aes-center">
+      <div class="aes-eyebrow">Choose your level</div><h2>Discreet packages</h2>
+      <div class="aes-tiers">
+        <div class="aes-card aes-tier" onclick="openVaultModal('new-audit','tier-0')"><div class="p aes-gold">$9</div><div class="n">Single Name Check</div></div>
+        <div class="aes-card aes-tier" onclick="openVaultModal('new-audit','tier-1')"><div class="p aes-gold">$25</div><div class="n">Preliminary Reconnaissance</div></div>
+        <div class="aes-card aes-tier" onclick="openVaultModal('new-audit','tier-2')"><div class="p aes-gold">$50</div><div class="n">Forensic Flag Assessment</div></div>
+        <div class="aes-card aes-tier" onclick="openVaultModal('new-audit','tier-3')"><div class="p aes-gold">$75</div><div class="n">Full Transcript Disclosure</div></div>
+        <div class="aes-card aes-tier" onclick="openVaultModal('new-audit','tier-4')"><div class="p aes-gold">$100</div><div class="n">30-Day Sentinel Surveillance</div></div>
+      </div>
+      <div style="margin-top:48px"><button class="aes-btn" onclick="openVaultModal('new-audit','tier-0')">BEGIN PRIVATELY</button></div>
+    </div></section>
+    <footer class="aes-foot">AURORA ELITE · Private &amp; discreet · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="/refund">Refunds</a></footer>
+  </div>
 
   <!-- ==========================================================================
        FULLSCREEN VAULT TERMINAL WORKSPACE (Sits Below Persistent Header)
