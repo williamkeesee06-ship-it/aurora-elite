@@ -7,7 +7,7 @@ const { APP_URL, applyCors, parseBody } = require('./_lib/security');
 const PACKAGES = {
   'tier-0': {
     name: 'Aurora Elite — Single Name Check',
-    desc: 'One private, discreet check: is your name being discussed? Yes or no, delivered in confidence.',
+    desc: 'Private yes or no: Mentioned or Not mentioned. Full details require a higher package.',
     priceInCents: 900, // $9.00
   },
   'tier-1': {

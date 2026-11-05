@@ -53,15 +53,15 @@ const TIER_DATA = {
     title: 'Entry: Single Name Check',
     price: '$9.00',
     priceVal: 9,
-    summaryDesc: 'One name. One quiet answer. A discreet yes-or-no check on whether you are being discussed in private dating review circles.',
+    summaryDesc: 'One name. One quiet answer: Mentioned or Not mentioned. Full details of what\'s being said require a higher package.',
     requiresPhoto: false,
     requiresLastInitial: false,
     requiresAlertPhone: false,
     inputs: ['First Name', 'Age', 'Dating Metro Location / City'],
     deliverables: [
-      '🔍 <strong>Single Discreet Answer:</strong> Are you being talked about? A private yes or no.',
+      '🔍 <strong>Single Discreet Answer:</strong> Mentioned or Not mentioned — nothing more.',
       '🛡️ <strong>Zero Trace:</strong> No notifications, no footprints, no one knows you looked.',
-      '⬆️ <strong>Upgrade Anytime:</strong> Move up to a full package whenever you want the details.'
+      '⬆️ <strong>Upgrade Anytime:</strong> Higher packages unlock what\'s being said, flags, and excerpts.'
     ],
     ctaText: 'PROCEED TO ENCRYPTED STRIPE CHECKOUT • $9.00'
   },
